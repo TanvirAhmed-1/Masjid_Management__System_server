@@ -1,7 +1,6 @@
 import { GenderType, RoleType } from "@prisma/client";
 import { z } from "zod";
 
-
 // Create / register schema (required fields)
 export const createUserSchema = z.object({
   name: z.string().nonempty("Name is required"),
@@ -19,7 +18,7 @@ export const createUserSchema = z.object({
     .min(3, "Address must be at least 3 characters")
     .optional(),
   gender: z.enum(GenderType, { message: "Gender is required" }),
-  role: z.enum(RoleType, { message: "Role is required" }),
+  role: z.enum(RoleType, { message: "Role is required" }).optional(),
 });
 const updateUserSchema = createUserSchema.partial();
 export const userValidation = {

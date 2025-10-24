@@ -6,7 +6,7 @@ export type Tuser = {
   email: string;
   address: string;
   password: string;
-  role: RoleType;
+  role?: RoleType;
   gender: GenderType;
   createdAt?: Date;
   updatedAt?: Date;
