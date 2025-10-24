@@ -1,0 +1,44 @@
+{
+  "name": "masjid_management_server-Prisma",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon --watch \"src/**/*.ts\" --exec ts-node src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js"
+  },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@prisma/client": "^6.15.0",
+    "bcrypt": "^6.0.0",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "http-status": "^2.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "slugify": "^1.6.6",
+    "zod": "^4.1.5"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
+    "@types/cookie-parser": "^1.4.9",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^24.7.1",
+    "@types/qs": "^6.14.0",
+    "@types/range-parser": "^1.2.7",
+    "@types/send": "^0.17.5",
+    "@types/serve-static": "^1.15.8",
+    "nodemon": "^3.1.10",
+    "prisma": "^6.15.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  }
+}
