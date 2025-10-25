@@ -1,7 +1,6 @@
 
 import catchAsync from "../../utils/catchAsync";
 import httpStatus from "http-status";
-import { loginSchema } from "./user.validation";
 import { userServices } from "./user.services";
 
 // Create User

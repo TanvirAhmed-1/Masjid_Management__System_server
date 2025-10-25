@@ -27,14 +27,62 @@ enum GenderType {
 }
 
 model User {
-  id        String     @id @default(auto()) @map("_id") @db.ObjectId
-  name      String
-  email     String     @unique
-  password  String
-  address   String
+  id         String     @id @default(auto()) @map("_id") @db.ObjectId
+  name       String
+  email      String     @unique
+  password   String
+  address    String
    role      RoleType   @default(USER)
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  gender    GenderType
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  gender      GenderType
+  ramadanyear RamadanYear[]
+  ifteriist   IfterList[]
+  ifikaflist   IfikafList[]
   @@map("user")
+}
+
+model RamadanYear {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  ramadanYear  String
+  titleName    String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  doners       IfterList[]
+  userId       String @db.ObjectId
+  user          User @relation(fields: [userId],references: [id])
+  @@map("ramadanyear")
+  @@index([userId])
+}
+
+model IfterList {
+  id                String  @id @default(auto()) @map("_id") @db.ObjectId
+  serialNumber      String
+  name              String
+  iftarDate         DateTime
+  dayName           String
+  ramadanyearId     String @db.ObjectId
+  ramadanyear       RamadanYear @relation(fields: [ramadanyearId], references: [id])
+  userId            String @db.ObjectId
+  user              User @relation(fields: [userId],references: [id])
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@map("ifterlist")
+  @@index([ramadanyearId])
+   @@index([userId])
+}
+
+model IfikafList{
+id              String @id @default(auto()) @map("_id") @db.ObjectId
+name            String
+formDate        DateTime?
+toDate          DateTime?
+userId          String @db.ObjectId
+user            User @relation(fields: [userId],references: [id])
+createdAt       DateTime @default(now())
+updatedAt       DateTime @updatedAt
+
+@@map("ifikaflist")
+@@index([userId])
 }
