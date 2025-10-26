@@ -64,21 +64,21 @@ const loginUser = async (email: string, password: string) => {
     role: user.role,
   };
 
-  // ✅ Check for environment variables
+  //  Check for environment variables
   if (!process.env.TOKEN_SECRET_KEY || !process.env.REFRESHTOKEN_SECRET_KEY) {
     throw new Error("JWT secret keys are missing in environment variables");
   }
 
-  // ✅ Access Token
+  //  Access Token
   const accessToken = jwt.sign(jwtPayload, process.env.TOKEN_SECRET_KEY, {
     expiresIn: "7d",
   });
 
-  // ✅ Refresh Token
+  //  Refresh Token
   const refreshToken = jwt.sign(
     jwtPayload,
     process.env.REFRESHTOKEN_SECRET_KEY,
-    { expiresIn: "30d" } // usually longer than access token
+    { expiresIn: "30d" } 
   );
 
   return {
@@ -91,10 +91,52 @@ const loginUser = async (email: string, password: string) => {
   };
 };
 
+
+const generateAccessTokenFromRefresh = async (refreshToken: string) => {
+  if (!refreshToken) {
+    throw new Error("Refresh token missing");
+  }
+
+  try {
+    // Verify refresh token
+    const decoded = jwt.verify(
+      refreshToken,
+       process.env.REFRESHTOKEN_SECRET_KEY  as string,
+    ) as jwt.JwtPayload;
+
+    //checking if the token has expired
+    if (decoded.exp) {
+      const timeNow = Math.round(Date.now() / 1000);
+      if (decoded.exp < timeNow) {
+        throw new Error("Refresh token expired. Please login again!");
+      }
+    }
+
+    // Create new access token
+    const newAccessToken = jwt.sign(
+      {
+        id: decoded.id,
+        name: decoded.name,
+        userId: decoded.userId,
+        email: decoded.email,
+        role: decoded.role,
+        courtId: decoded.courtId,
+      },
+      process.env.REFRESHTOKEN_SECRET_KEY as string,
+      { expiresIn: "7d" },
+    );
+
+    return { token: newAccessToken };
+  } catch (err) {
+    throw new Error("Invalid or expired refresh token");
+  }
+};
+
 export const userServices = {
   createUserDB,
   getUserDB,
   updateProfileDB,
   deleteUserDB,
   loginUser,
+  generateAccessTokenFromRefresh
 };

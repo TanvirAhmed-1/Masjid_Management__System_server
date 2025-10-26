@@ -4,7 +4,7 @@ export type ItikaInterface = {
   fromDate?: Date;
   toDate?: Date;
   userId: string;
-  ramadanYear: string;
+  ramadanId: string;
   createdAt?: Date;
   updatedAt?: Date;
 };

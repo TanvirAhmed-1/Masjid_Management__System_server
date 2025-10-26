@@ -73,11 +73,23 @@ const loginUser = catchAsync(async (req, res) => {
     result,
   });
 });
+const generateAccessTokenFromRefresh = catchAsync(async (req, res) => {
+  const result = await userServices.generateAccessTokenFromRefresh(
+    req.cookies?.refreshToken,
+  );
 
+  res.status(httpStatus.OK).json({
+    success: true,
+    statusCode: 201,
+    message: "Token generated successfully",
+    result,
+  });
+});
 export const UserController = {
   createdUser,
   fetchUser,
   updateUser,
   deleteUser,
   loginUser,
+  generateAccessTokenFromRefresh
 };
