@@ -9,13 +9,23 @@ const createItikaDB = async (payload: ItikaInterface) => {
 };
 
 const getAllItikaDB = async () => {
-  const result = await prisma.ifikafList.findMany();
+  const result = await prisma.ifikafList.findMany({
+    include: {
+      ramadanYear: {
+        select: {
+          ramadanYear: true,
+          titleName: true,
+        },
+      },
+    },
+  });
   return result;
 };
 
 const getSingleItikaDB = async (id: string) => {
   const result = await prisma.ifikafList.findUnique({
     where: { id },
+    include: { ramadanYear: true },
   });
   return result;
 };

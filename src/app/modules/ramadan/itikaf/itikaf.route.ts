@@ -8,7 +8,7 @@ const router = Router();
 router.use(auth());
 
 router.post(
-  "/itikas",
+  "/itikafs",
   auth(),
   validateRequest(itikafSchema),
   itikaController.createItika
