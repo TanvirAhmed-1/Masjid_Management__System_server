@@ -57,22 +57,34 @@ model RamadanYear {
 }
 
 model IfterList {
-  id                String  @id @default(auto()) @map("_id") @db.ObjectId
-  serialNumber      String
-  name              String
-  iftarDate         DateTime
-  dayName           String
-  ramadanyearId     String @db.ObjectId
-  ramadanyear       RamadanYear @relation(fields: [ramadanyearId], references: [id])
-  userId            String @db.ObjectId
-  user              User @relation(fields: [userId],references: [id])
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  ramadanyearId String?   @db.ObjectId
+  ramadanyear   RamadanYear? @relation(fields: [ramadanyearId], references: [id])
+  userId        String   @db.ObjectId
+  user          User     @relation(fields: [userId], references: [id])
+  doners        Doner[]  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
   @@map("ifterlist")
   @@index([ramadanyearId])
-   @@index([userId])
+  @@index([userId])
 }
+
+model Doner {
+  id           String     @id @default(auto()) @map("_id") @db.ObjectId
+  serialNumber String
+  name         String
+  iftarDate    DateTime
+  dayName      String
+  ifterListId  String     @db.ObjectId
+  ifterList    IfterList  @relation(fields: [ifterListId], references: [id])
+
+  @@map("doners")
+  @@index([ifterListId])
+}
+
+
 
 model IfikafList {
   id           String       @id @default(auto()) @map("_id") @db.ObjectId

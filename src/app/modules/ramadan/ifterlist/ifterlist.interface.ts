@@ -1,11 +1,15 @@
-export type ifterlistinterface = {
-  id?: string;
+export type Doner = {
   serialNumber: string;
   name: string;
-  iftarDate: Date;
+  iftarDate: Date | string;
   dayName: string;
+};
+
+export interface IfterListInterface {
+  id?: string;
   ramadanyearId: string;
   userId: string;
+  doners: Doner[];
   createdAt?: Date;
   updatedAt?: Date;
-};
+}
