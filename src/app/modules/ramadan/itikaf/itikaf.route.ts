@@ -16,7 +16,7 @@ router.post(
 
 router.get("/itikafs", itikaController.getAllItika);
 
-router.get("/itikafs/:id", itikaController.getSingleItika);
+router.get("/itikafs/:ramadanId", itikaController.getSingleItika);
 
 router.put("/itikafs/:id", auth(), itikaController.updateItika);
 

@@ -27,8 +27,8 @@ const getAllItika = catchAsync(async (req, res) => {
 });
 
 const getSingleItika = catchAsync(async (req, res) => {
-  const { id } = req.params;
-  const result = await itikaServices.getSingleItikaDB(id);
+  const { ramadanId } = req.params;
+  const result = await itikaServices.getSingleItikaDB(ramadanId);
   res.status(httpStatus.OK).json({
     success: true,
     message: "Itika record fetched successfully",

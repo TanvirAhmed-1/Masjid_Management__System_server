@@ -30,8 +30,6 @@ import { Doner, IfterListInterface } from "./ifterlist.interface";
 //   });
 // };
 
-
-
 const createlistDB = async (payload: IfterListInterface) => {
   const { ramadanyearId, doners, userId, ...data } = payload;
 
@@ -44,7 +42,7 @@ const createlistDB = async (payload: IfterListInterface) => {
   if (existing) {
     // Simply add all donors to the existing list
     await prisma.doner.createMany({
-      data: doners.map(d => ({
+      data: doners.map((d) => ({
         serialNumber: d.serialNumber,
         name: d.name,
         iftarDate: new Date(d.iftarDate),
@@ -67,7 +65,7 @@ const createlistDB = async (payload: IfterListInterface) => {
       userId,
       ...data,
       doners: {
-        create: doners.map(d => ({
+        create: doners.map((d) => ({
           serialNumber: d.serialNumber,
           name: d.name,
           iftarDate: new Date(d.iftarDate),
@@ -103,22 +101,26 @@ const getifterlistDB = async () => {
   });
 };
 
-const getSingleItikaDB = async (id: string) => {
-  return await prisma.ifterList.findUnique({
+const getIftarListByRamadanYearDB = async (ramadanyearId: string) => {
+  return await prisma.ifterList.findMany({
+    where: { ramadanyearId },
     include: {
       doners: {
         orderBy: {
-          iftarDate: "asc",
+          serialNumber: "asc",
         },
       },
       ramadanyear: {
         select: {
           id: true,
           ramadanYear: true,
+          titleName: true,
         },
       },
     },
-    where: { id },
+    orderBy: {
+      createdAt: "desc",
+    },
   });
 };
 
@@ -173,7 +175,7 @@ const deleteifterdonerDD = async (id: string) => {
 export const ifterlistServices = {
   createlistDB,
   getifterlistDB,
-  getSingleItikaDB,
+  getIftarListByRamadanYearDB,
   updateifterlistDB,
   deleteifterlistDB,
   deleteifterdonerDD,

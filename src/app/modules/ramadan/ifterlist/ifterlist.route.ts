@@ -15,7 +15,7 @@ router.post(
   ifterlistcontroller.createifterlist
 );
 
-router.get("/ifterlists/:id", ifterlistcontroller.getsingleifterlist);
+router.get("/ifterlists/:ramadanyearId", ifterlistcontroller.getsingleifterlist);
 
 router.put("/ifterlists/:id", ifterlistcontroller.updateifterlist);
 

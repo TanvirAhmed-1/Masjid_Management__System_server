@@ -29,11 +29,11 @@ const getifterlist = catchAsync(async (req, res) => {
 
 const getsingleifterlist = catchAsync(async (req, res) => {
   const { id } = req.params;
-  const result = await ifterlistServices.getSingleItikaDB(id);
+  const result = await ifterlistServices.getIftarListByRamadanYearDB(id);
 
   res.status(httpStatus.OK).json({
     success: true,
-    message: "Iftar list record fetched successfully",
+    message: "Iftar lists fetched by Ramadan year successfully",
     result,
   });
 });

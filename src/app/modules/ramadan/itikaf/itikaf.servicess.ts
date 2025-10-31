@@ -22,10 +22,9 @@ const getAllItikaDB = async () => {
   return result;
 };
 
-const getSingleItikaDB = async (id: string) => {
-  const result = await prisma.ifikafList.findUnique({
-    where: { id },
-    include: { ramadanYear: true },
+const getSingleItikaDB = async (ramadanId: string) => {
+  const result = await prisma.ifikafList.findMany({
+    where: { ramadanId },
   });
   return result;
 };
