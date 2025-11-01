@@ -39,6 +39,8 @@ model User {
   ramadanyear RamadanYear[]
   ifteriist   IfterList[]
   ifikaflist   IfikafList[]
+  payment      Payment[]
+  member       Member[]
   @@map("user")
 }
 
@@ -102,4 +104,41 @@ model IfikafList {
 
   @@map("ifikaflist")
   @@index([userId,ramadanId])
+}
+
+
+
+model Member {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  name          String
+  phone         String?
+  address       String?
+  monthlyAmount Float
+  payments      Payment[]
+  createdAt     DateTime @default(now())
+  userId       String       @db.ObjectId
+  user          User     @relation(fields: [userId], references: [id])
+  updatedAt     DateTime @updatedAt
+  
+
+  @@map("member")
+   @@index([userId])
+}
+
+model Payment {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  memberId  String   @db.ObjectId
+  member    Member   @relation(fields: [memberId], references: [id])
+  monthKey  String  
+  monthName String   
+  amount    Float
+  paidDate  DateTime @default(now())
+  userId       String       @db.ObjectId
+  user          User     @relation(fields: [userId], references: [id])
+  updatedAt     DateTime @updatedAt
+  
+
+  @@map("payment")
+  @@index([userId,memberId])
+  @@unique([memberId, monthKey])
 }
