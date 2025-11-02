@@ -140,5 +140,5 @@ model Payment {
 
   @@map("payment")
   @@index([userId,memberId])
-  @@unique([memberId, monthKey])
+
 }

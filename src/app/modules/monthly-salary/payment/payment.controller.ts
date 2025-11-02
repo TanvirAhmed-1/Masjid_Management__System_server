@@ -3,7 +3,9 @@ import catchAsync from "../../../utils/catchAsync";
 import { paymentService } from "./payment.services";
 
 const createPayment = catchAsync(async (req, res) => {
-  const result = await paymentService.create(req.body);
+  const userId = req.user!.id;
+  const payload = { ...req.body, userId };
+  const result = await paymentService.create(payload);
   res.status(httpStatus.CREATED).json({
     success: true,
     statusCode: 201,
@@ -15,6 +17,18 @@ const createPayment = catchAsync(async (req, res) => {
 const getMonthlyPayments = catchAsync(async (req, res) => {
   const { monthKey } = req.query;
   const result = await paymentService.getMonthlyPayments(monthKey as string);
+  res.status(httpStatus.OK).json({
+    success: true,
+    statusCode: 200,
+    message: "Payment fetched successfully",
+    result,
+  });
+});
+
+const getMemberPaymentSummary = catchAsync(async (req, res) => {
+  const result = await paymentService.getMemberPaymentSummary(
+    req.params.memberId
+  );
   res.status(httpStatus.OK).json({
     success: true,
     statusCode: 200,
@@ -48,4 +62,5 @@ export const paymentController = {
   getMonthlyPayments,
   updatePayment,
   deletePayment,
+  getMemberPaymentSummary,
 };

@@ -13,6 +13,8 @@ router.post(
 
 router.get("/payments", paymentController.getMonthlyPayments);
 
+router.get("/payments/:memberId", paymentController.getMemberPaymentSummary);
+
 router.put("/payments/:id", paymentController.updatePayment);
 
 router.delete("/payments/:id", paymentController.deletePayment);
