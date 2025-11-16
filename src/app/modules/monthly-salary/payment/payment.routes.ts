@@ -11,9 +11,11 @@ router.post(
   paymentController.createPayment
 );
 
-router.get("/payments", paymentController.getMonthlyPayments);
+router.get("/payments/monthly", paymentController.getMonthlyPayments);
 
-router.get("/payments/:memberId", paymentController.getMemberPaymentSummary);
+router.get("/payments/summary/:memberId", paymentController.getMemberPaymentSummary);
+
+router.get("/payments/status/all", paymentController.getAllMembersWithStatus);
 
 router.put("/payments/:id", paymentController.updatePayment);
 

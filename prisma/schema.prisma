@@ -108,6 +108,42 @@ model IfikafList {
 
 
 
+// model Member {
+//   id            String    @id @default(auto()) @map("_id") @db.ObjectId
+//   name          String
+//   phone         String?
+//   address       String?
+//   monthlyAmount Float
+//   payments      Payment[]
+//   createdAt     DateTime @default(now())
+//   userId       String       @db.ObjectId
+//   user          User     @relation(fields: [userId], references: [id])
+//   updatedAt     DateTime @updatedAt
+  
+
+//   @@map("member")
+//    @@index([userId])
+// }
+
+// model Payment {
+//   id        String   @id @default(auto()) @map("_id") @db.ObjectId
+//   memberId  String   @db.ObjectId
+//   member    Member   @relation(fields: [memberId], references: [id])
+//   monthKey  String  
+//   monthName String   
+//   amount    Float
+//   paidDate  DateTime @default(now())
+//   userId       String       @db.ObjectId
+//   user          User     @relation(fields: [userId], references: [id])
+//   updatedAt     DateTime @updatedAt
+  
+
+//   @@map("payment")
+//   @@index([userId,memberId])
+
+// }
+
+
 model Member {
   id            String    @id @default(auto()) @map("_id") @db.ObjectId
   name          String
@@ -115,30 +151,31 @@ model Member {
   address       String?
   monthlyAmount Float
   payments      Payment[]
-  createdAt     DateTime @default(now())
-  userId       String       @db.ObjectId
-  user          User     @relation(fields: [userId], references: [id])
-  updatedAt     DateTime @updatedAt
-  
+  createdAt     DateTime?  @default(now())
+  userId        String    @db.ObjectId
+  user          User      @relation(fields: [userId], references: [id])
+  updatedAt     DateTime  @updatedAt
 
   @@map("member")
-   @@index([userId])
+  @@index([userId])
+  @@index([createdAt])
 }
 
 model Payment {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   memberId  String   @db.ObjectId
-  member    Member   @relation(fields: [memberId], references: [id])
-  monthKey  String  
+  member    Member   @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  monthKey  String   // Format: YYYY-MM (e.g., "2025-01")
   monthName String   
   amount    Float
   paidDate  DateTime @default(now())
-  userId       String       @db.ObjectId
-  user          User     @relation(fields: [userId], references: [id])
-  updatedAt     DateTime @updatedAt
-  
+  userId    String   @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("payment")
-  @@index([userId,memberId])
-
+  @@index([userId, memberId])
+  @@index([monthKey])
+  @@index([memberId, monthKey])
 }
