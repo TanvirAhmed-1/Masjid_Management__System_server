@@ -37,11 +37,18 @@ const getMemberById = catchAsync(async (req, res) => {
 
 const updateMember = catchAsync(async (req, res) => {
   const result = await memberServices.updateMenberDB(req.params.id, req.body);
+
+  if (!result) {
+    return res.status(httpStatus.NOT_FOUND).json({
+      success: false,
+      message: "Member not found",
+    });
+  }
+
   res.status(httpStatus.OK).json({
     success: true,
-    statusCode: 200,
     message: "Member updated successfully",
-    result,
+    data: result,
   });
 });
 

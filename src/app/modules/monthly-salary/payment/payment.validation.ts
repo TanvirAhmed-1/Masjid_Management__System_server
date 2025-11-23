@@ -1,10 +1,17 @@
+// src/modules/payment/payment.validation.ts
 import { z } from "zod";
 
-export const PaymentValidationSchema = z.object({
-  memberId: z.string({ message: "Member ID is required" }),
-  monthKey: z.string({ message: "Month key is required" }),
-  monthName: z.string({ message: "Month name is required" }),
-  amount: z
-    .number({ message: "Amount must be a number" })
-    .min(1, "Amount must be greater than 0"),
-});
+export const PaymentValidation = {
+  create: z.object({
+    memberId: z.string().length(24, "Invalid Member ID"),
+    monthKey: z
+      .string()
+      .regex(/^\d{4}-(0[1-9]|1[0-2])$/, "Month format must be YYYY-MM (ex: 2025-01)"),
+    amount: z.number().positive("Amount must be greater than 0"),
+  }),
+
+  monthKey: z
+    .string()
+    .regex(/^\d{4}-(0[1-9]|1[0-2])$/, "Invalid month format")
+    .optional(),
+};

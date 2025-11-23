@@ -1,18 +1,14 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
   provider = "prisma-client-js"
-  //output   = "../generated/prisma"
 }
 
 datasource db {
   provider = "mongodb"
   url      = env("DATABASE_URL")
 }
+
 enum RoleType {
   SUPER_ADMIN
   ADMIN
@@ -108,50 +104,14 @@ model IfikafList {
 
 
 
-// model Member {
-//   id            String    @id @default(auto()) @map("_id") @db.ObjectId
-//   name          String
-//   phone         String?
-//   address       String?
-//   monthlyAmount Float
-//   payments      Payment[]
-//   createdAt     DateTime @default(now())
-//   userId       String       @db.ObjectId
-//   user          User     @relation(fields: [userId], references: [id])
-//   updatedAt     DateTime @updatedAt
-  
-
-//   @@map("member")
-//    @@index([userId])
-// }
-
-// model Payment {
-//   id        String   @id @default(auto()) @map("_id") @db.ObjectId
-//   memberId  String   @db.ObjectId
-//   member    Member   @relation(fields: [memberId], references: [id])
-//   monthKey  String  
-//   monthName String   
-//   amount    Float
-//   paidDate  DateTime @default(now())
-//   userId       String       @db.ObjectId
-//   user          User     @relation(fields: [userId], references: [id])
-//   updatedAt     DateTime @updatedAt
-  
-
-//   @@map("payment")
-//   @@index([userId,memberId])
-
-// }
-
-
 model Member {
   id            String    @id @default(auto()) @map("_id") @db.ObjectId
   name          String
-  phone         String?
+  phone         String?   @unique
   address       String?
   monthlyAmount Float
   payments      Payment[]
-  createdAt     DateTime?  @default(now())
+  createdAt     DateTime  @default(now())
   userId        String    @db.ObjectId
   user          User      @relation(fields: [userId], references: [id])
   updatedAt     DateTime  @updatedAt
@@ -165,17 +125,21 @@ model Payment {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   memberId  String   @db.ObjectId
   member    Member   @relation(fields: [memberId], references: [id], onDelete: Cascade)
-  monthKey  String   // Format: YYYY-MM (e.g., "2025-01")
-  monthName String   
+  
+  monthKey  String
   amount    Float
   paidDate  DateTime @default(now())
+  
   userId    String   @db.ObjectId
   user      User     @relation(fields: [userId], references: [id])
+  
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  @@unique([memberId, monthKey])
   @@map("payment")
-  @@index([userId, memberId])
+  @@index([userId])
+  @@index([memberId])
   @@index([monthKey])
-  @@index([memberId, monthKey])
+ 
 }

@@ -1,24 +1,28 @@
+// src/modules/payment/payment.routes.ts
 import { Router } from "express";
 import { paymentController } from "./payment.controller";
 import validateRequest from "../../../middlewares/validateRequest";
-import { PaymentValidationSchema } from "./payment.validation";
+import { PaymentValidation } from "./payment.validation";
+import { auth } from "../../../middlewares/auth.middleware";
 
 const router = Router();
-
+router.use(auth());
 router.post(
   "/payments",
-  validateRequest(PaymentValidationSchema),
+  validateRequest(PaymentValidation.create),
   paymentController.createPayment
 );
 
-router.get("/payments/monthly", paymentController.getMonthlyPayments);
+router.get(
+  "/payments/member/:memberId",
 
-router.get("/payments/summary/:memberId", paymentController.getMemberPaymentSummary);
+  paymentController.getMemberSummary
+);
+router.get(
+  "/payments/month/:monthKey",
 
-router.get("/payments/status/all", paymentController.getAllMembersWithStatus);
-
-router.put("/payments/:id", paymentController.updatePayment);
-
-router.delete("/payments/:id", paymentController.deletePayment);
+  paymentController.getMonthlyReport
+);
+router.get("/payments", paymentController.getAllPayments);
 
 export const paymentRoutes = router;
