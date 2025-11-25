@@ -3,24 +3,24 @@ import prisma from "../../../utils/prisma";
 import { TCreatePayment, TMemberPaymentSummary } from "./payment.interface";
 
 class PaymentService {
-  // পেমেন্ট যোগ করা
+  // Add a payment
   async createPayment(payload: TCreatePayment & { userId: string }) {
     const { memberId, monthKey, amount, userId } = payload;
 
-    // চেক: মেম্বার আছে কিনা
+    // Check if member exists
     const member = await prisma.member.findUnique({
       where: { id: memberId },
     });
     if (!member) throw new Error("Member not found");
 
-    // চেক: এই মাসে আগে পে করেছে কিনা
+ 
     const alreadyPaid = await prisma.payment.findUnique({
       where: {
         memberId_monthKey: { memberId, monthKey },
       },
     });
     if (alreadyPaid) {
-      throw new Error(`${monthKey} মাসের পেমেন্ট আগেই করা আছে`);
+      throw new Error(`Payment for ${monthKey} has already been made`);
     }
 
     return await prisma.payment.create({
@@ -38,7 +38,6 @@ class PaymentService {
     });
   }
 
-  // এক মেম্বারের পুরা পেমেন্ট হিস্ট্রি + ডিউ ক্যালকুলেশন
   async getMemberPaymentSummary(memberId: string): Promise<TMemberPaymentSummary> {
     const member = await prisma.member.findUnique({
       where: { id: memberId },
@@ -83,7 +82,7 @@ class PaymentService {
     };
   }
 
-  // মাস অনুযায়ী টোটাল কালেকশন রিপোর্ট
+
   async getMonthlyCollection(monthKey: string) {
     const payments = await prisma.payment.findMany({
       where: { monthKey },
