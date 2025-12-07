@@ -104,7 +104,6 @@ class PaymentService {
     };
   }
 
-  // সব পেমেন্ট (admin dashboard এর জন্য)
   async getAllPayments() {
     return await prisma.payment.findMany({
       include: {

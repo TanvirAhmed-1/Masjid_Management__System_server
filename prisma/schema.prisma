@@ -37,6 +37,8 @@ model User {
   ifikaflist   IfikafList[]
   payment      Payment[]
   member       Member[]
+  ramadanIftarSalary RamadanIftarSalary[]
+  ramadanIftarSalaryPayments RamadanIftarSalaryPayment[]
   @@map("user")
 }
 
@@ -69,6 +71,51 @@ model IfterList {
   @@index([userId])
 }
 
+model RamadanIftarSalary {
+  id           String     @id @default(auto()) @map("_id") @db.ObjectId
+  ramadanYear  String
+  totalSalary  Float
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  userId       String     @db.ObjectId
+  user         User       @relation(fields: [userId], references: [id])
+
+  payments     RamadanIftarSalaryPayment[]
+
+  @@map("ramadaniftarsalary")
+  @@index([userId])
+}
+
+
+model RamadanIftarSalaryPayment {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  amount    Float
+  payDate   DateTime @default(now())
+
+  salaryId  String   @db.ObjectId
+  salary    RamadanIftarSalary @relation(fields: [salaryId], references: [id])
+
+  memberId  String   @db.ObjectId
+  member    Member   @relation(fields: [memberId], references: [id])
+
+  userId    String   @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@map("ramadaniftarsalarypayment")
+  @@index([salaryId])
+  @@index([memberId])
+  @@index([userId])
+}
+
+
+
+
+
+
+
 model Doner {
   id           String     @id @default(auto()) @map("_id") @db.ObjectId
   serialNumber String
@@ -92,7 +139,7 @@ model IfikafList {
   ramadanId    String       @db.ObjectId
   userId       String       @db.ObjectId
 
-  ramadanYear  RamadanYear  @relation(fields: [ramadanId], references: [id]) // ✅ fixed
+  ramadanYear  RamadanYear  @relation(fields: [ramadanId], references: [id]) 
   user         User          @relation(fields: [userId], references: [id])
 
   createdAt    DateTime     @default(now())
@@ -115,6 +162,7 @@ model Member {
   userId        String    @db.ObjectId
   user          User      @relation(fields: [userId], references: [id])
   updatedAt     DateTime  @updatedAt
+  ramadanIftarSalaryPayments RamadanIftarSalaryPayment[]
 
   @@map("member")
   @@index([userId])

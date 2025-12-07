@@ -5,6 +5,7 @@ import { itikaRoutes } from "../modules/ramadan/itikaf/itikaf.route";
 import { ifterlistRoutes } from "../modules/ramadan/ifterlist/ifterlist.route";
 import { memberRoutes } from "../modules/monthly-salary/member/member.routes";
 import { paymentRoutes } from "../modules/monthly-salary/payment/payment.routes";
+import { ramadanTarabiSalaryRoutes } from "../modules/ramadan/ramadan-tarabi-salary/ramadan-tarabi-salary.route";
 const router = Router();
 
 const allRouters = [
@@ -14,6 +15,7 @@ const allRouters = [
   ifterlistRoutes,
   memberRoutes,
   paymentRoutes,
+  ramadanTarabiSalaryRoutes,
 ];
 
 allRouters.forEach((route) => router.use(route));
