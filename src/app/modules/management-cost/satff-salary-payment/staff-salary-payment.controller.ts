@@ -1,0 +1,58 @@
+import httpStatus from "http-status";
+import catchAsync from "../../../utils/catchAsync";
+import { staffSalaryPaymentServices } from "./staff-salary-payment.services";
+
+const createStaffSalaryPayment = catchAsync(async (req, res) => {
+  const data = req.body;
+  const userid = req.user?.id;
+  const payload = {
+    ...data,
+    userId: userid,
+  };
+  const result = await staffSalaryPaymentServices.createSalaryPaymentDB(
+    payload
+  );
+  res.status(httpStatus.CREATED).json({
+    success: true,
+    message: "staff created successfully",
+    result,
+  });
+});
+const getAllStaffSalaryPayments = catchAsync(async (req, res) => {
+  const result = await staffSalaryPaymentServices.getAllSalaryPaymentDB();
+  res.status(httpStatus.OK).json({
+    success: true,
+    message: "staff fetched successfully",
+    result,
+  });
+});
+
+const updateStaffSalaryPayment = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const data = req.body;
+  const result = await staffSalaryPaymentServices.updateSalaryPaymentDB(
+    id,
+    data
+  );
+  res.status(httpStatus.OK).json({
+    success: true,
+    message: "staff updated successfully",
+    result,
+  });
+});
+
+const deleteStaffSalaryPayment = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const result = await staffSalaryPaymentServices.deleteSalaryPaymentDB(id);
+  res.status(httpStatus.OK).json({
+    success: true,
+    message: "staff deleted successfully",
+    result,
+  });
+});
+export const staffSalaryPaymentController = {
+  createStaffSalaryPayment,
+  getAllStaffSalaryPayments,
+  updateStaffSalaryPayment,
+  deleteStaffSalaryPayment,
+};

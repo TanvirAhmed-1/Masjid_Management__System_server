@@ -39,6 +39,9 @@ model User {
   member       Member[]
   ramadanIftarSalary RamadanIftarSalary[]
   ramadanIftarSalaryPayments RamadanIftarSalaryPayment[]
+  monthlySalary MonthlySalary[]
+  salaryPayment SalaryPayment[]
+  memberAccessoryPurchases MemberAccessoryPurchase[]
   @@map("user")
 }
 
@@ -107,6 +110,60 @@ model RamadanIftarSalaryPayment {
   @@map("ramadaniftarsalarypayment")
   @@index([salaryId])
   @@index([memberId])
+  @@index([userId])
+}
+
+
+model Staff {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  image       String?
+  address     String
+  phone       String?
+  role        String      // Imam, Muazzin, Cleaner, Security etc.
+  baseSalary  Float       
+  joinDate    DateTime    @default(now())
+  active      Boolean     @default(true)
+
+  salaries    MonthlySalary[]
+
+  @@map("staff")
+}
+
+model MonthlySalary {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  month       DateTime   
+  staffId     String   @db.ObjectId
+  staff       Staff    @relation(fields: [staffId], references: [id])
+
+  totalSalary Float     // Full salary amount for the month
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  userId      String    @db.ObjectId
+  user        User      @relation(fields: [userId], references: [id])
+
+  payments    SalaryPayment[]
+
+  @@unique([month, staffId])   // Prevent duplicate month salary
+  @@map("monthlysalary")
+  @@index([staffId])
+}
+model SalaryPayment {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  amount    Float
+  payDate   DateTime @default(now())
+
+  salaryId  String   @db.ObjectId
+  salary    MonthlySalary @relation(fields: [salaryId], references: [id])
+
+  userId    String   @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@map("salarypayment")
+  @@index([salaryId])
   @@index([userId])
 }
 
@@ -191,3 +248,27 @@ model Payment {
   @@index([monthKey])
  
 }
+
+
+model MemberAccessoryPurchase {
+
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId        String   @db.ObjectId
+  user          User     @relation(fields: [userId], references: [id])
+  
+  itemName      String   
+  quantity      Int      @default(1)
+  price         Float    
+  totalPrice    Float    
+  purchaseDate   DateTime @default(now())
+  description    String?  
+  paymentReceipt String?  
+  memberName     String?   
+  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@map("member_accessory_purchase")
+  @@index([userId])
+}
+
