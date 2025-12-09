@@ -32,18 +32,76 @@ model User {
   createdAt  DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
   gender      GenderType
+
+
+  fridayCollections FridayCollection[]
   ramadanyear RamadanYear[]
   ifteriist   IfterList[]
   ifikaflist   IfikafList[]
   payment      Payment[]
   member       Member[]
-  ramadanIftarSalary RamadanIftarSalary[]
-  ramadanIftarSalaryPayments RamadanIftarSalaryPayment[]
+  ramadantarabiSalary RamadantarabiSalary[]
+  ramadantarabiSalaryPayments RamadantarabiSalaryPayment[]
   monthlySalary MonthlySalary[]
   salaryPayment SalaryPayment[]
   memberAccessoryPurchases MemberAccessoryPurchase[]
   @@map("user")
 }
+
+
+model FridayCollection{
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  amount      Float
+
+  userId      String   @db.ObjectId
+  user        User     @relation(fields: [userId], references: [id])
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("fridaycollection")
+  @@index([userId])
+}
+
+model OtherCollectionName{
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  description String?
+
+  userId      String   @db.ObjectId
+  user        User     @relation(fields: [userId], references: [id])
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("othercollectionname")
+  @@index([userId])
+}
+
+model otherCollection {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  donors      DonerName[]     
+ 
+  otherCollectionNameId String   @db.ObjectId
+  otherCollectionName   OtherCollectionName @relation(fields: [otherCollectionNameId], references: [id])
+
+  userId      String   @db.ObjectId
+  user        User     @relation(fields: [userId], references: [id])
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("othercollection")
+  @@index([otherCollectionNameId])
+  @@index([userId])
+}
+
+type DonerName {
+  name       String
+  anount     Float
+  createdAt  DateTime @default(now())
+}
+
 
 model RamadanYear {
   id           String   @id @default(auto()) @map("_id") @db.ObjectId
@@ -74,7 +132,7 @@ model IfterList {
   @@index([userId])
 }
 
-model RamadanIftarSalary {
+model RamadantarabiSalary {
   id           String     @id @default(auto()) @map("_id") @db.ObjectId
   ramadanYear  String
   totalSalary  Float
@@ -84,20 +142,20 @@ model RamadanIftarSalary {
   userId       String     @db.ObjectId
   user         User       @relation(fields: [userId], references: [id])
 
-  payments     RamadanIftarSalaryPayment[]
+  payments     RamadantarabiSalaryPayment[]
 
-  @@map("ramadaniftarsalary")
+  @@map("ramadantarabisalary")
   @@index([userId])
 }
 
 
-model RamadanIftarSalaryPayment {
+model RamadantarabiSalaryPayment {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   amount    Float
   payDate   DateTime @default(now())
 
   salaryId  String   @db.ObjectId
-  salary    RamadanIftarSalary @relation(fields: [salaryId], references: [id])
+  salary    RamadantarabiSalary @relation(fields: [salaryId], references: [id])
 
   memberId  String   @db.ObjectId
   member    Member   @relation(fields: [memberId], references: [id])
@@ -219,7 +277,7 @@ model Member {
   userId        String    @db.ObjectId
   user          User      @relation(fields: [userId], references: [id])
   updatedAt     DateTime  @updatedAt
-  ramadanIftarSalaryPayments RamadanIftarSalaryPayment[]
+  ramadantarabiSalaryPayments RamadantarabiSalaryPayment[]
 
   @@map("member")
   @@index([userId])
