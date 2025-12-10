@@ -16,6 +16,8 @@ const getallcollectionDB = async () => {
   });
 };
 const deleteFridayCollectionDB = async (id: string) => {
+  const collection = await prisma.fridayCollection.findUnique({ where: { id } });
+  if (!collection) throw new Error("Friday Collection id not found");
   return await prisma.fridayCollection.delete({
     where: { id },
   });
@@ -24,6 +26,10 @@ const updateFridayCollectionDB = async (
   id: string,
   payloed: Partial<IFridayCollection>
 ) => {
+  const isExits = await prisma.fridayCollection.findUnique({
+    where: { id },
+  });
+  if (!isExits) throw new Error("Friday Collection id not found");  
   return await prisma.fridayCollection.update({
     where: { id },
     data: payloed,
