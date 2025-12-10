@@ -7,7 +7,7 @@ import {
 // Ramadan Iftar Salary Service
 
 const createSalary = async (payload: IRamadanIftarSalary) => {
-  const salary = await prisma.ramadanIftarSalary.create({
+  const salary = await prisma.ramadantarabiSalary.create({
     data: {
       ramadanYear: payload.ramadanYear,
       totalSalary: payload.totalSalary,
@@ -20,7 +20,7 @@ const createSalary = async (payload: IRamadanIftarSalary) => {
 // Fetch all salaries
 
 const fetchSalaries = async () => {
-  const salaries = await prisma.ramadanIftarSalary.findMany({
+  const salaries = await prisma.ramadantarabiSalary.findMany({
     include: {
       payments: {
         include: { member: true },
@@ -32,7 +32,7 @@ const fetchSalaries = async () => {
 
 // Fetch salary by ID
 const fetchSalaryById = async (salaryId: string) => {
-  const salary = await prisma.ramadanIftarSalary.findUnique({
+  const salary = await prisma.ramadantarabiSalary.findUnique({
     where: { id: salaryId },
     include: {
       payments: {
@@ -45,7 +45,7 @@ const fetchSalaryById = async (salaryId: string) => {
 
 // add a payment
 const addPayment = async (payload: IRamadanIftarSalaryPayment) => {
-  const payment = await prisma.ramadanIftarSalaryPayment.create({
+  const payment = await prisma.ramadantarabiSalaryPayment.create({
     data: {
       amount: payload.amount,
       salaryId: payload.salaryId,
@@ -59,7 +59,7 @@ const addPayment = async (payload: IRamadanIftarSalaryPayment) => {
 // Update a payment
 
 const updatePayment = async (paymentId: string, amount: number) => {
-  const payment = await prisma.ramadanIftarSalaryPayment.update({
+  const payment = await prisma.ramadantarabiSalaryPayment.update({
     where: { id: paymentId },
     data: { amount },
   });
@@ -69,7 +69,7 @@ const updatePayment = async (paymentId: string, amount: number) => {
 // Delete a payment
 
 const deletePayment = async (paymentId: string) => {
-  const payment = await prisma.ramadanIftarSalaryPayment.delete({
+  const payment = await prisma.ramadantarabiSalaryPayment.delete({
     where: { id: paymentId },
   });
   return payment;
@@ -78,7 +78,7 @@ const deletePayment = async (paymentId: string) => {
 // Get Member Payment Summary (total paid, remaining)
 
 const getMemberPaymentStatus = async (salaryId: string) => {
-  const salary = await prisma.ramadanIftarSalary.findUnique({
+  const salary = await prisma.ramadantarabiSalary.findUnique({
     where: { id: salaryId },
     include: {
       user: {
