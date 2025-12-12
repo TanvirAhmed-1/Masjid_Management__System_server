@@ -7,12 +7,12 @@ import { fridayCollectionSchema } from "./friday-collection.validation";
 const route = Router();
 route.use(auth());
 route.post(
-  "/friday-collections ",
+  "/friday-collections",
   validateRequest(fridayCollectionSchema),
   fridayCollectionController.createfridaycollection
 );
 route.get(
-  "/friday-collections ",
+  "/friday-collections",
   fridayCollectionController.getAllFridayCollection
 );
 route.put(
