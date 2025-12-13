@@ -86,7 +86,7 @@ model OtherCollectionName {
 model OtherCollection {
   id            String      @id @default(auto()) @map("_id") @db.ObjectId
   donors        DonerName[]
-
+  date          DateTime?    
   otherCollectionNameId String   @db.ObjectId
   otherCollectionName   OtherCollectionName @relation(fields: [otherCollectionNameId], references: [id])
 

@@ -8,12 +8,12 @@ const route = Router();
 
 route.use(auth());
 route.post(
-  "/collection-names ",
+  "/collection-names",
   validateRequest(otherCollectionNameSchema),
   otherCollectionNameController.createcollectionName
 );
 route.get(
-  "/collection-names ",
+  "/collection-names",
   otherCollectionNameController.getAllcollectionName
 );
 route.put(

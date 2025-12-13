@@ -7,6 +7,8 @@ import { memberRoutes } from "../modules/monthly-salary/member/member.routes";
 import { paymentRoutes } from "../modules/monthly-salary/payment/payment.routes";
 import { ramadanTarabiSalaryRoutes } from "../modules/ramadan/ramadan-tarabi-salary/ramadan-tarabi-salary.route";
 import { fridayCollectionRoutes } from "../modules/collection/friday-collection/friday-collection.route";
+import { otherCollectionNameRoutes } from "../modules/collection/other-collection-Name/otherCollectionName.route";
+import { otherCollectionRoutes } from "../modules/collection/other-collection/other-collection.route";
 const router = Router();
 
 const allRouters = [
@@ -18,6 +20,8 @@ const allRouters = [
   paymentRoutes,
   ramadanTarabiSalaryRoutes,
   fridayCollectionRoutes,
+  otherCollectionNameRoutes,
+  otherCollectionRoutes,
 ];
 
 allRouters.forEach((route) => router.use(route));

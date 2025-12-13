@@ -1,6 +1,10 @@
 import z from "zod";
 
 export const otherCollectionValidationSchema = z.object({
+  date: z
+    .string()
+    .nonempty("Date is required")
+    .transform((val) => new Date(val)),
   donors: z
     .array(
       z.object({
@@ -12,5 +16,4 @@ export const otherCollectionValidationSchema = z.object({
   otherCollectionNameId: z
     .string()
     .min(1, "Other Collection Name ID is required"),
-  userId: z.string().min(1, "User ID is required"),
 });

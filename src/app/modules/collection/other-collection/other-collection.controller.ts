@@ -1,11 +1,18 @@
 import httpStatus from "http-status";
 import catchAsync from "../../../utils/catchAsync";
 import { otherCollectionService } from "./other-collection.services";
-import { success } from "zod";
 
 const createCollection = catchAsync(async (req, res) => {
   const data = req.body;
-  const result = await otherCollectionService.createcollectionDB(data);
+  const userid = req.user?.id;
+   if (!req.user?.id) {
+    throw new Error("User not authenticated");
+  }
+  const payload = {
+    ...data,
+    userId: userid!,
+  };
+  const result = await otherCollectionService.createcollectionDB(payload);
   res.status(httpStatus.CREATED).json({
     success: true,
     message: "Collection created successfully",

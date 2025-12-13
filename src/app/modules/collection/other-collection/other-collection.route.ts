@@ -2,9 +2,11 @@ import { Router } from "express";
 import { otherCollectionController } from "./other-collection.controller";
 import validateRequest from "../../../middlewares/validateRequest";
 import { otherCollectionValidationSchema } from "./other-collection.validation";
+import { auth } from "../../../middlewares/auth.middleware";
 
 const router = Router();
 
+router.use(auth());
 // Create
 router.post(
   "/other-collection",

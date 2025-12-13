@@ -1,6 +1,5 @@
-import { httpStatus } from "http-status";
+import  httpStatus  from "http-status";
 import catchAsync from "../../../utils/catchAsync";
-import prisma from "../../../utils/prisma";
 import { OtherCollectionNameServices } from "./otherCollectionName.services";
 
 const createcollectionName = catchAsync(async (req, res) => {
