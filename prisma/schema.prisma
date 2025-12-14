@@ -101,10 +101,13 @@ model OtherCollection {
   @@index([userId])
 }
 
-type DonerName {
-  name       String
-  amount     Float
-  createdAt  DateTime @default(now())
+model DonerName {
+  id          String           @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  amount      Float
+  createdAt   DateTime         @default(now())
+  collection  OtherCollection  @relation(fields: [collectionId], references: [id])
+  collectionId String          @db.ObjectId
 }
 
 

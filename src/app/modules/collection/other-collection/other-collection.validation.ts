@@ -12,7 +12,7 @@ export const otherCollectionValidationSchema = z.object({
         amount: z.number().min(0, "Amount must be non-negative"),
       })
     )
-    .min(1, "At least one donor is required"),
+    .optional(),
   otherCollectionNameId: z
     .string()
     .min(1, "Other Collection Name ID is required"),
