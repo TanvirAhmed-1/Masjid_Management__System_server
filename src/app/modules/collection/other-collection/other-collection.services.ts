@@ -100,7 +100,6 @@
 //   return await prisma.donerName.delete({ where: { id: donorId } });
 // };
 
-
 // export const otherCollectionService = {
 //   deleteDonorDB,
 //   createcollectionDB,
@@ -109,9 +108,6 @@
 //   updateDonorsDB,
 //   getCollectionByIdDB,
 // };
-
-
-
 
 import prisma from "../../../utils/prisma";
 
@@ -212,8 +208,33 @@ const updateColeectionDB = async (id: string, data: any) => {
     where: { id },
     data,
   });
-}
-// -------------------- Update Donor --------------------
+};
+
+const createDonerDB = async (data: {
+  collectionId: string;
+  name: string;
+  amount: number;
+}) => {
+  //  Check collection exists
+  const collection = await prisma.otherCollection.findUnique({
+    where: { id: data.collectionId },
+  });
+
+  if (!collection) {
+    throw new Error("Collection not found");
+  }
+
+  // Create donor
+  return await prisma.donerName.create({
+    data: {
+      name: data.name,
+      amount: data.amount,
+      collectionId: data.collectionId,
+    },
+  });
+};
+
+//  Update Donor
 const updateDonorDB = async (
   donorId: string,
   newData: { name?: string; amount?: number }
@@ -227,7 +248,7 @@ const updateDonorDB = async (
   });
 };
 
-// -------------------- Delete Donor --------------------
+//  Delete Donor
 const deleteDonorDB = async (donorId: string) => {
   const donor = await prisma.donerName.findUnique({ where: { id: donorId } });
   if (!donor) throw new Error("Donor not found");
@@ -244,5 +265,5 @@ export const otherCollectionService = {
   updateColeectionDB,
   updateDonorDB,
   deleteDonorDB,
+  createDonerDB,
 };
-

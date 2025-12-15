@@ -164,6 +164,23 @@ const updateCollection = catchAsync(async (req, res) => {
   });
 });
 
+const CreateDoner = catchAsync(async (req, res) => {
+  const { collectionId, name, amount } = req.body;
+
+  const result = await otherCollectionService.createDonerDB({
+    collectionId,
+    name,
+    amount,
+  });
+
+  res.status(httpStatus.CREATED).json({
+    success: true,
+    message: "Donor created successfully",
+    result,
+  });
+});
+
+
 // -------------------- Get Collection By ID --------------------
 const getCollectionById = catchAsync(async (req, res) => {
   const { id } = req.params;
@@ -195,6 +212,7 @@ export const otherCollectionController = {
   deleteCollection,
   deleteDonor,
   updateDonor,
-  updateCollection
+  updateCollection,
+  CreateDoner
 };
   

@@ -8,7 +8,6 @@ const router = Router();
 
 router.use(auth());
 
-// -------------------- Collection Routes --------------------
 // Create Collection
 router.post(
   "/other-collection",
@@ -34,7 +33,8 @@ router.delete(
   otherCollectionController.deleteCollection
 );
 
-// -------------------- Donor Routes --------------------
+//  Donor Routes  section
+router.post("/other-collection/donor", otherCollectionController.CreateDoner);
 // Update Donor
 router.put(
   "/other-collection/donor/:donorId",
