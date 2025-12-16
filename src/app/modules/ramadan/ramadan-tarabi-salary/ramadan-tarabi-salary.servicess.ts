@@ -82,7 +82,7 @@ const getMemberPaymentStatus = async (salaryId: string) => {
     where: { id: salaryId },
     include: {
       user: {
-        include: { member: true },
+        include: { members: true },
       },
       payments: true,
     },
@@ -90,7 +90,7 @@ const getMemberPaymentStatus = async (salaryId: string) => {
 
   if (!salary) throw new Error("Salary not found");
 
-  const members = salary.user.member;
+  const members = salary.user.members;
 
   const result = members.map((member) => {
     const memberPayments = salary.payments.filter(

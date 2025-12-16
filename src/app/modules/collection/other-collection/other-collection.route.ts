@@ -36,7 +36,7 @@ router.delete(
 //  Donor Routes  section
 router.post("/other-collection/donor", otherCollectionController.CreateDoner);
 // Update Donor
-router.put(
+router.put( 
   "/other-collection/donor/:donorId",
   otherCollectionController.updateDonor
 );

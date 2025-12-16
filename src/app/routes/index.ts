@@ -9,10 +9,12 @@ import { ramadanTarabiSalaryRoutes } from "../modules/ramadan/ramadan-tarabi-sal
 import { fridayCollectionRoutes } from "../modules/collection/friday-collection/friday-collection.route";
 import { otherCollectionNameRoutes } from "../modules/collection/other-collection-Name/otherCollectionName.route";
 import { otherCollectionRoutes } from "../modules/collection/other-collection/other-collection.route";
+import { mosqueRoutes } from "../modules/mosque/mosque.route";
 const router = Router();
 
 const allRouters = [
   userRoute,
+  mosqueRoutes,
   ramadanDataSetUpRoute,
   itikaRoutes,
   ifterlistRoutes,
