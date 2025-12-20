@@ -25,6 +25,7 @@ const createFridayCollectionDB = async (payload: IFridayCollection) => {
       amount: payload.amount,
       collectionDate: new Date(payload.collectionDate),
       userId: payload.userId,
+      mosqueId: payload.mosqueId,
     },
   });
 };

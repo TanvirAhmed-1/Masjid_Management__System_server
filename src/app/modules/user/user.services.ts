@@ -4,14 +4,13 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 
-
-dotenv.config(); 
+dotenv.config();
 
 const createUserDB = async (payload: Tuser) => {
   const hashedPassword = await bcrypt.hash(payload.password, 10);
-  const existingEmail=await prisma.user.findUnique({
-    where:{email:payload.email}
-  })
+  const existingEmail = await prisma.user.findUnique({
+    where: { email: payload.email },
+  });
   if (existingEmail) {
     throw new Error("Email already exists!");
   }
@@ -46,7 +45,14 @@ const deleteUserDB = async (userId: string) => {
 };
 
 const loginUser = async (email: string, password: string) => {
-  const user = await prisma.user.findUnique({ where: { email } });
+  const user = await prisma.user.findUnique({
+    where: { email },
+    include: {
+      mosque: {
+        select: { id: true, name: true },
+      },
+    },
+  });
 
   if (!user) {
     throw new Error("User email not found!");
@@ -62,6 +68,7 @@ const loginUser = async (email: string, password: string) => {
     email: user.email,
     name: user.name,
     role: user.role,
+    mosqueId: user.mosque?.id,
   };
 
   //  Check for environment variables
@@ -78,7 +85,7 @@ const loginUser = async (email: string, password: string) => {
   const refreshToken = jwt.sign(
     jwtPayload,
     process.env.REFRESHTOKEN_SECRET_KEY,
-    { expiresIn: "30d" } 
+    { expiresIn: "30d" }
   );
 
   return {
@@ -86,11 +93,12 @@ const loginUser = async (email: string, password: string) => {
     email: user.email,
     name: user.name,
     role: user.role,
+    mosqueId: user.mosque?.id,
+    mosqueName: user.mosque?.name,
     accessToken,
     refreshToken,
   };
 };
-
 
 const generateAccessTokenFromRefresh = async (refreshToken: string) => {
   if (!refreshToken) {
@@ -101,7 +109,7 @@ const generateAccessTokenFromRefresh = async (refreshToken: string) => {
     // Verify refresh token
     const decoded = jwt.verify(
       refreshToken,
-       process.env.REFRESHTOKEN_SECRET_KEY  as string,
+      process.env.REFRESHTOKEN_SECRET_KEY as string
     ) as jwt.JwtPayload;
 
     //checking if the token has expired
@@ -116,14 +124,13 @@ const generateAccessTokenFromRefresh = async (refreshToken: string) => {
     const newAccessToken = jwt.sign(
       {
         id: decoded.id,
-        name: decoded.name,
-        userId: decoded.userId,
         email: decoded.email,
+        name: decoded.name,
         role: decoded.role,
-        courtId: decoded.courtId,
+        mosqueId: decoded.mosqueId, // ✅ MUST
       },
-      process.env.REFRESHTOKEN_SECRET_KEY as string,
-      { expiresIn: "7d" },
+      process.env.TOKEN_SECRET_KEY as string,
+      { expiresIn: "7d" }
     );
 
     return { token: newAccessToken };
@@ -138,5 +145,5 @@ export const userServices = {
   updateProfileDB,
   deleteUserDB,
   loginUser,
-  generateAccessTokenFromRefresh
+  generateAccessTokenFromRefresh,
 };

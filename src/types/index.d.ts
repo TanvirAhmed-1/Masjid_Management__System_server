@@ -6,6 +6,7 @@ declare namespace Express {
       email: string;
       role: "SUPER_ADMIN" | "ADMIN" | "USER" | "MEMBER";
       name: string;
+      mosqueId: string;
     };
   }
 }

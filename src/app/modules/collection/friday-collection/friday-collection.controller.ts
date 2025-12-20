@@ -5,9 +5,19 @@ import { FridayCollectionServices } from "./friday-collection.services";
 const createfridaycollection = catchAsync(async (req, res) => {
   const payload = req.body;
   const userid = req.user?.id;
+  const mosqueId = req.user?.mosqueId;
+console.log("USER ID:", userid, "MOSQUE ID:", mosqueId);
+  if (!mosqueId) {
+    return res.status(httpStatus.BAD_REQUEST).json({
+      success: false,
+      message: "User or Mosque not found in token",
+    });
+  }
+
   const result = await FridayCollectionServices.createFridayCollectionDB({
     ...payload,
     userId: userid!,
+    mosqueId: mosqueId!,
   });
   res.status(httpStatus.OK).json({
     success: true,
