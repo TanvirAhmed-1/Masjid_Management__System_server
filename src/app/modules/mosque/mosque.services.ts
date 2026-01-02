@@ -42,7 +42,10 @@ const createMosqueWithAdminDB = async (
 };
 
 const getAllMosquesDB = async () => {
-  return await prisma.mosque.findMany();
+  return await prisma.mosque.findMany({
+    include: { users: { select: { name: true, email: true } } },
+    orderBy: { createdAt: "desc" },
+  });
 };
 
 const getMosqueByIdDB = async (id: string) => {
