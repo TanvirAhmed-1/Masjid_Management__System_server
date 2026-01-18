@@ -6,7 +6,6 @@ const createfridaycollection = catchAsync(async (req, res) => {
   const payload = req.body;
   const userid = req.user?.id;
   const mosqueId = req.user?.mosqueId;
-console.log("USER ID:", userid, "MOSQUE ID:", mosqueId);
   if (!mosqueId) {
     return res.status(httpStatus.BAD_REQUEST).json({
       success: false,
@@ -25,8 +24,13 @@ console.log("USER ID:", userid, "MOSQUE ID:", mosqueId);
     data: result,
   });
 });
+
 const getAllFridayCollection = catchAsync(async (req, res) => {
-  const result = await FridayCollectionServices.getallcollectionDB();
+  const mosqueId = req.user?.mosqueId;
+  const result = await FridayCollectionServices.getallcollectionDB({
+    ...req.query,
+    mosqueId,
+  });
   res.status(httpStatus.OK).json({
     success: true,
     message: "Friday Collection fetched successfully",

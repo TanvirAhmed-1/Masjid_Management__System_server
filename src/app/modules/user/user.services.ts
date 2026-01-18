@@ -127,7 +127,7 @@ const generateAccessTokenFromRefresh = async (refreshToken: string) => {
         email: decoded.email,
         name: decoded.name,
         role: decoded.role,
-        mosqueId: decoded.mosqueId, // ✅ MUST
+        mosqueId: decoded.mosqueId,
       },
       process.env.TOKEN_SECRET_KEY as string,
       { expiresIn: "7d" }

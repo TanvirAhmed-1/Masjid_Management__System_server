@@ -3,7 +3,9 @@ import { IFridayCollection } from "./friday-collection.interface";
 
 const createFridayCollectionDB = async (payload: IFridayCollection) => {
   // Normalize incoming date to YYYY-MM-DD
-  const incomingDate = new Date(payload.collectionDate).toISOString().split("T")[0];
+  const incomingDate = new Date(payload.collectionDate)
+    .toISOString()
+    .split("T")[0];
 
   // Check if already exists for that day
   const isExists = await prisma.fridayCollection.findFirst({
@@ -29,9 +31,13 @@ const createFridayCollectionDB = async (payload: IFridayCollection) => {
     },
   });
 };
+
+
 const upsertFridayCollectionDB = async (payload: IFridayCollection) => {
   // Normalize incoming date to YYYY-MM-DD
-  const incomingDate = new Date(payload.collectionDate).toISOString().split("T")[0];
+  const incomingDate = new Date(payload.collectionDate)
+    .toISOString()
+    .split("T")[0];
 
   // Check if a collection exists for that day
   const existingCollection = await prisma.fridayCollection.findFirst({
@@ -65,15 +71,73 @@ const upsertFridayCollectionDB = async (payload: IFridayCollection) => {
   });
 };
 
+const getallcollectionDB = async (queryParams: Record<string, any>) => {
+  const {
+    fromDate,
+    toDate,
+    mosqueId,
+    page = 1,
+    limit = 30,
+    sortBy = "createdAt",
+    sortOrder = "desc",
+  } = queryParams;
 
+  // 🔐 mosqueId must
+  if (!mosqueId) {
+    throw new Error("Mosque ID is required");
+  }
 
+  const skip = (Number(page) - 1) * Number(limit);
+  const take = Number(limit);
 
-const getallcollectionDB = async () => {
-  return await prisma.fridayCollection.findMany({
-    orderBy: { createdAt: "desc" },
-    include: { user: { select: { name: true, email: true } } },
+  // ✅ where condition build
+  const whereCondition: any = {
+    mosqueId,
+  };
+
+  // ✅ date filter (optional)
+  if (fromDate && toDate) {
+    whereCondition.collectionDate = {
+      gte: new Date(fromDate),
+      lte: new Date(toDate),
+    };
+  }
+
+  // ✅ main query
+  const data = await prisma.fridayCollection.findMany({
+    where: whereCondition,
+    skip,
+    take,
+    orderBy: {
+      [sortBy]: sortOrder,
+    },
+    include: {
+      user: {
+        select: {
+          name: true,
+          email: true,
+        },
+      },
+    },
   });
+
+  // ✅ total count (pagination support)
+  const total = await prisma.fridayCollection.count({
+    where: whereCondition,
+  });
+
+  return {
+    meta: {
+      page: Number(page),
+      limit: Number(limit),
+      total,
+      totalPage: Math.ceil(total / Number(limit)),
+    },
+    data,
+  };
 };
+
+
 const deleteFridayCollectionDB = async (id: string) => {
   const collection = await prisma.fridayCollection.findUnique({
     where: { id },
