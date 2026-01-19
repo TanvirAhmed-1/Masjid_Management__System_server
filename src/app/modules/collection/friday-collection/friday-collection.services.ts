@@ -33,44 +33,6 @@ const createFridayCollectionDB = async (payload: IFridayCollection) => {
 };
 
 
-const upsertFridayCollectionDB = async (payload: IFridayCollection) => {
-  // Normalize incoming date to YYYY-MM-DD
-  const incomingDate = new Date(payload.collectionDate)
-    .toISOString()
-    .split("T")[0];
-
-  // Check if a collection exists for that day
-  const existingCollection = await prisma.fridayCollection.findFirst({
-    where: {
-      collectionDate: {
-        gte: new Date(`${incomingDate}T00:00:00.000Z`),
-        lte: new Date(`${incomingDate}T23:59:59.999Z`),
-      },
-    },
-  });
-
-  if (existingCollection) {
-    // Update the existing collection
-    return await prisma.fridayCollection.update({
-      where: { id: existingCollection.id },
-      data: {
-        amount: payload.amount,
-        collectionDate: new Date(payload.collectionDate),
-        userId: payload.userId,
-      },
-    });
-  }
-
-  // Otherwise, create a new collection
-  return await prisma.fridayCollection.create({
-    data: {
-      amount: payload.amount,
-      collectionDate: new Date(payload.collectionDate),
-      userId: payload.userId,
-    },
-  });
-};
-
 const getallcollectionDB = async (queryParams: Record<string, any>) => {
   const {
     fromDate,
@@ -82,7 +44,7 @@ const getallcollectionDB = async (queryParams: Record<string, any>) => {
     sortOrder = "desc",
   } = queryParams;
 
-  // 🔐 mosqueId must
+  //  mosqueId must
   if (!mosqueId) {
     throw new Error("Mosque ID is required");
   }
@@ -90,12 +52,12 @@ const getallcollectionDB = async (queryParams: Record<string, any>) => {
   const skip = (Number(page) - 1) * Number(limit);
   const take = Number(limit);
 
-  // ✅ where condition build
+  //  where condition build
   const whereCondition: any = {
     mosqueId,
   };
 
-  // ✅ date filter (optional)
+  // date filter (optional)
   if (fromDate && toDate) {
     whereCondition.collectionDate = {
       gte: new Date(fromDate),
@@ -121,7 +83,7 @@ const getallcollectionDB = async (queryParams: Record<string, any>) => {
     },
   });
 
-  // ✅ total count (pagination support)
+  //  total count (pagination support)
   const total = await prisma.fridayCollection.count({
     where: whereCondition,
   });

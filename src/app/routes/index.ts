@@ -7,7 +7,7 @@ import { memberRoutes } from "../modules/monthly-salary/member/member.routes";
 import { paymentRoutes } from "../modules/monthly-salary/payment/payment.routes";
 import { ramadanTarabiSalaryRoutes } from "../modules/ramadan/ramadan-tarabi-salary/ramadan-tarabi-salary.route";
 import { fridayCollectionRoutes } from "../modules/collection/friday-collection/friday-collection.route";
-import { otherCollectionNameRoutes } from "../modules/collection/other-collection-Name/otherCollectionName.route";
+import { otherCollectionNameRoutes } from "../modules/collection/collection-datasetUp-Name/otherCollectionName.route";
 import { otherCollectionRoutes } from "../modules/collection/other-collection/other-collection.route";
 import { mosqueRoutes } from "../modules/mosque/mosque.route";
 const router = Router();
