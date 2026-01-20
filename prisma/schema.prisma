@@ -24,11 +24,10 @@ model Mosque {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   name      String
   address   String?
-  phone     String?  @unique // optional করলাম, প্রয়োজনে required করতে পারেন
+  phone     String?  @unique 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  // SUPER_ADMIN যে মসজিদ তৈরি করেছে তার reference
   createdBy String? @db.ObjectId
   creator   User?   @relation("MosqueCreator", fields: [createdBy], references: [id])
 
@@ -65,14 +64,12 @@ model User {
   updatedAt DateTime   @updatedAt
   gender    GenderType
 
-  // যে মসজিদের সাথে এই ইউজার যুক্ত (ADMIN/MEMBER)
   mosqueId String? @db.ObjectId
   mosque   Mosque? @relation(fields: [mosqueId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
-  // SUPER_ADMIN যে সব মসজিদ তৈরি করেছে
+
   createdMosques Mosque[] @relation("MosqueCreator")
 
-  // অন্যান্য relations
   fridayCollections           FridayCollection[]
   ramadanYears                RamadanYear[]
   ifterLists                  IfterList[]
