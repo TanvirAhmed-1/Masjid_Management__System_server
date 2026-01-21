@@ -4,8 +4,13 @@ import { ifterlistServices } from "./ifterlist.services";
 
 const createifterlist = catchAsync(async (req, res) => {
   const userId = req.user?.id;
+  const mosqueId = req.user?.mosqueId;
+  if (!mosqueId) throw new Error("Mosque ID is required");
+  if (!userId) throw new Error("User not authenticated");
+
   const payload = {
     userId,
+    mosqueId,
     ...req.body,
   };
 
@@ -19,7 +24,11 @@ const createifterlist = catchAsync(async (req, res) => {
 });
 
 const getifterlist = catchAsync(async (req, res) => {
-  const result = await ifterlistServices.getifterlistDB();
+  const mosqueId = req.user?.mosqueId;
+  const result = await ifterlistServices.getifterlistDB({
+    mosqueId,
+    ...req.query,
+  });
   res.status(httpStatus.OK).json({
     success: true,
     message: "Iftar list records fetched successfully",

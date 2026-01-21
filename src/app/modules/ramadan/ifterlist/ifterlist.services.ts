@@ -1,35 +1,5 @@
 import prisma from "../../../utils/prisma";
 import { Doner, IfterListInterface } from "./ifterlist.interface";
-
-// const createlistDB = async (payload: IfterListInterface) => {
-//   const { ramadanyearId, doners, userId, ...data } = payload;
-
-//   const existing = await prisma.ifterList.findFirst({
-//     where: { ramadanyearId },
-//   });
-
-//   if (!existing) {
-//     throw new Error("Iftar list not found!");
-//   }
-
-//   if (existing) {
-//    return await prisma.doner.createMany({
-//      data: doners
-//    })
-//   }
-//   return await prisma.ifterList.create({
-//     data: {
-//       ramadanyearId,
-//       userId,
-//       ...data,
-//       doners: {
-//         create: doners,
-//       },
-//     },
-//     include: { doners: true },
-//   });
-// };
-
 const createlistDB = async (payload: IfterListInterface) => {
   const { ramadanyearId, doners, userId, ...data } = payload;
 
@@ -79,12 +49,64 @@ const createlistDB = async (payload: IfterListInterface) => {
   return newList;
 };
 
-const getifterlistDB = async () => {
-  return await prisma.ifterList.findMany({
+const getifterlistDB = async (query: any) => {
+  const {
+    mosqueId,
+    limit = 20,
+    page = 1,
+    sortBy = "createdAt",
+    sortOrder = "desc",
+    ramadanYear,
+    date,
+    name,
+  } = query;
+
+  if (!mosqueId) {
+    throw new Error("Mosque ID is required");
+  }
+
+  const skip = (Number(page) - 1) * Number(limit);
+  const take = Number(limit);
+
+  const whereCondition: any = { mosqueId };
+
+  if (ramadanYear) {
+    whereCondition.ramadanyearId = ramadanYear;
+  }
+
+  // 🟢 merge doners filter safely
+  if (date || name) {
+    whereCondition.doners = {
+      some: {},
+    };
+
+    if (date) {
+      whereCondition.doners.some.iftarDate = new Date(date);
+    }
+
+    if (name) {
+      whereCondition.doners.some.name = {
+        contains: name,
+        mode: "insensitive",
+      };
+    }
+  }
+
+  const total = await prisma.ifterList.count({
+    where: whereCondition,
+  });
+
+  const result = await prisma.ifterList.findMany({
+    where: whereCondition,
+    skip,
+    take,
+    orderBy: {
+      [sortBy]: sortOrder,
+    },
     include: {
       doners: {
         orderBy: {
-          iftarDate: "asc",
+          serialNumber: "desc",
         },
       },
       ramadanyear: {
@@ -95,10 +117,17 @@ const getifterlistDB = async () => {
         },
       },
     },
-    orderBy: {
-      createdAt: "desc",
-    },
   });
+
+  return {
+    meta: {
+      page: Number(page),
+      limit: Number(limit),
+      total,
+      totalPage: Math.ceil(total / Number(limit)),
+    },
+    data: result,
+  };
 };
 
 const getIftarListByRamadanYearDB = async (ramadanyearId: string) => {
@@ -123,19 +152,6 @@ const getIftarListByRamadanYearDB = async (ramadanyearId: string) => {
     },
   });
 };
-
-// const updateifterlistDB = async (
-//   id: string,
-//   payload: Partial<IfterListInterface>
-// ) => {
-//   // Extract fields that shouldn't be updated directly
-//   const { ramadanyearId, userId, doners, ...updateData } = payload;
-
-//   return await prisma.ifterList.update({
-//     where: { id },
-//     data: updateData,
-//   });
-// };
 
 const updateifterlistDB = async (id: string, doner: Partial<Doner>) => {
   return await prisma.doner.update({

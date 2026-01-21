@@ -8,6 +8,7 @@ export type Doner = {
 export interface IfterListInterface {
   id?: string;
   ramadanyearId: string;
+  mosqueId: string;
   userId: string;
   doners: Doner[];
   createdAt?: Date;
