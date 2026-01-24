@@ -2,12 +2,18 @@ import httpStatus from "http-status";
 import catchAsync from "../../../utils/catchAsync";
 import { itikaServices } from "./itikaf.servicess";
 
-
 const createItika = catchAsync(async (req, res) => {
   const userId = req.user?.id;
   const data = req.body;
+  const mosqueId = req.user?.mosqueId;
+  if (!mosqueId) {
+    throw new Error("Mosque        ID is required");
+  }
+  if (!userId) {
+    throw new Error("User ID is required");
+  }
 
-  const payload = { ...data, userId };
+  const payload = { ...data, userId, mosqueId };
   const result = await itikaServices.createItikaDB(payload);
 
   res.status(httpStatus.CREATED).json({
@@ -18,7 +24,12 @@ const createItika = catchAsync(async (req, res) => {
 });
 
 const getAllItika = catchAsync(async (req, res) => {
-  const result = await itikaServices.getAllItikaDB();
+  const mosqueId = req.user?.mosqueId;
+  if (!mosqueId) {
+    throw new Error("Mosque ID is required");
+  }
+
+  const result = await itikaServices.getAllItikaDB({ mosqueId, ...req.query });
   res.status(httpStatus.OK).json({
     success: true,
     message: "Itika records fetched successfully",

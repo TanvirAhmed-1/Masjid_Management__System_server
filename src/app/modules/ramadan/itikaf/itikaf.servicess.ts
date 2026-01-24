@@ -8,8 +8,44 @@ const createItikaDB = async (payload: ItikaInterface) => {
   return result;
 };
 
-const getAllItikaDB = async () => {
+const getAllItikaDB = async (query: any) => {
+  const {
+    mosqueId,
+    limit = 20,
+    page = 1,
+    sortBy = "createdAt",
+    sortOrder = "desc",
+    year,
+    name,
+  } = query;
+  if (!mosqueId) throw new Error("Mosque ID is required");
+
+  const skip = (Number(page) - 1) * Number(limit);
+  const take = Number(limit);
+  const whereCondition: any = { mosqueId };
+
+  if (year) {
+    whereCondition.ramadanYear = {
+      is: {
+        ramadanYear: year, 
+      },
+    };
+  }
+
+  if (name) {
+    whereCondition.name = {
+      contains: name,
+      mode: "insensitive",
+    };
+  }
+
   const result = await prisma.ifikafList.findMany({
+    where: whereCondition,
+    skip,
+    take,
+    orderBy: {
+      [sortBy]: sortOrder,
+    },
     include: {
       ramadanYear: {
         select: {
@@ -19,7 +55,17 @@ const getAllItikaDB = async () => {
       },
     },
   });
-  return result;
+  const total = await prisma.ifikafList.count({ where: whereCondition });
+  const totalPage = Math.ceil(total / Number(limit));
+  return {
+    meta: {
+      total,
+      page,
+      limit,
+      totalPage,
+    },
+    data: result,
+  };
 };
 
 const getSingleItikaDB = async (ramadanId: string) => {

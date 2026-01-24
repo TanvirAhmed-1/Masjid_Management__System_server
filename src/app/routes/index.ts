@@ -10,6 +10,7 @@ import { fridayCollectionRoutes } from "../modules/collection/friday-collection/
 import { otherCollectionNameRoutes } from "../modules/collection/collection-datasetUp-Name/otherCollectionName.route";
 import { otherCollectionRoutes } from "../modules/collection/other-collection/other-collection.route";
 import { mosqueRoutes } from "../modules/mosque/mosque.route";
+import { staffRoutes } from "../modules/management-cost/staff/satff.route";
 const router = Router();
 
 const allRouters = [
@@ -24,6 +25,7 @@ const allRouters = [
   fridayCollectionRoutes,
   otherCollectionNameRoutes,
   otherCollectionRoutes,
+  staffRoutes,
 ];
 
 allRouters.forEach((route) => router.use(route));

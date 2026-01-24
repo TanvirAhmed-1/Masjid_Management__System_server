@@ -5,10 +5,16 @@ import { staffServices } from "./satff.services";
 const createsatff = catchAsync(async (req, res) => {
   const data = req.body;
   const userid = req.user?.id;
+  const mosqueId = req.user?.mosqueId;
+  if (!mosqueId) {
+    throw new Error("Mosque ID is required");
+  }
   const payload = {
     ...data,
     userId: userid,
+    mosqueId,
   };
+  
   const result = await staffServices.createstffDB(payload);
   res.status(httpStatus.CREATED).json({
     success: true,
@@ -18,7 +24,8 @@ const createsatff = catchAsync(async (req, res) => {
 });
 
 const getAllstaff = catchAsync(async (req, res) => {
-  const result = await staffServices.getAllstaffDB();
+  const mosqueId = req.user?.mosqueId;
+  const result = await staffServices.getAllstaffDB({ mosqueId, ...req.query });
   res.status(httpStatus.OK).json({
     success: true,
     message: "staff fetched successfully",
@@ -38,7 +45,7 @@ const getstaffById = catchAsync(async (req, res) => {
 const updatestaff = catchAsync(async (req, res) => {
   const { id } = req.params;
   const data = req.body;
-    const result = await staffServices.updatestaffDB(id, data);
+  const result = await staffServices.updatestaffDB(id, data);
   res.status(httpStatus.OK).json({
     success: true,
     message: "staff updated successfully",
