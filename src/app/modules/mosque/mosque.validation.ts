@@ -33,7 +33,6 @@ export const createMosqueWithAdminSchema = z.object({
     confirmPassword: z.string(),
     address: z.string().min(1, "Admin address is required").trim(),
     gender: GenderType,
-    // role ফিল্ড সরিয়ে ফেললাম – ব্যাকএন্ডে "ADMIN" সেট হবে
     phone: z
       .string()
       .regex(/^\d*$/, "Phone number must contain only digits")

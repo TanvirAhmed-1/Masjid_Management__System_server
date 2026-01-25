@@ -3,23 +3,28 @@ import catchAsync from "../../../utils/catchAsync";
 import { staffSalaryPaymentServices } from "./staff-salary-payment.services";
 
 const createStaffSalaryPayment = catchAsync(async (req, res) => {
-  const data = req.body;
-  const userid = req.user?.id;
   const payload = {
-    ...data,
-    userId: userid,
+    ...req.body,
+    userId: req.user!.id,
+    mosqueId: req.user!.mosqueId,
   };
-  const result = await staffSalaryPaymentServices.createSalaryPaymentDB(
-    payload
-  );
+
+  const result =
+    await staffSalaryPaymentServices.createSalaryPaymentDB(payload);
+
   res.status(httpStatus.CREATED).json({
     success: true,
-    message: "staff created successfully",
+    message: "Salary payment created successfully",
     result,
   });
 });
+
 const getAllStaffSalaryPayments = catchAsync(async (req, res) => {
-  const result = await staffSalaryPaymentServices.getAllSalaryPaymentDB();
+  const mosqueId = req.user?.mosqueId;
+  const result = await staffSalaryPaymentServices.getAllSalaryPaymentDB({
+    ...req.query,
+    mosqueId,
+  });
   res.status(httpStatus.OK).json({
     success: true,
     message: "staff fetched successfully",
@@ -32,7 +37,7 @@ const updateStaffSalaryPayment = catchAsync(async (req, res) => {
   const data = req.body;
   const result = await staffSalaryPaymentServices.updateSalaryPaymentDB(
     id,
-    data
+    data,
   );
   res.status(httpStatus.OK).json({
     success: true,

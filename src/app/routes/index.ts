@@ -11,6 +11,7 @@ import { otherCollectionNameRoutes } from "../modules/collection/collection-data
 import { otherCollectionRoutes } from "../modules/collection/other-collection/other-collection.route";
 import { mosqueRoutes } from "../modules/mosque/mosque.route";
 import { staffRoutes } from "../modules/management-cost/staff/satff.route";
+import { staffSalaryPaymentRoutes } from "../modules/management-cost/satff-salary-payment/staff-salary-payment.route";
 const router = Router();
 
 const allRouters = [
@@ -26,6 +27,7 @@ const allRouters = [
   otherCollectionNameRoutes,
   otherCollectionRoutes,
   staffRoutes,
+  staffSalaryPaymentRoutes,
 ];
 
 allRouters.forEach((route) => router.use(route));

@@ -230,7 +230,7 @@ model RamadantarabiSalaryPayment {
   @@index([salaryId, mosqueId, memberId, userId])
   @@map("ramadaniftarsalarypayment")
 }
-
+ // Staff Model
 model Staff {
   id         String   @id @default(auto()) @map("_id") @db.ObjectId
   name       String
@@ -256,6 +256,25 @@ model Staff {
   @@map("staff")
 }
 
+model SalaryPayment {
+  id      String   @id @default(auto()) @map("_id") @db.ObjectId
+  amount  Float
+  payDate DateTime @default(now())
+
+  salaryId String        @db.ObjectId
+  salary   MonthlySalary @relation(fields: [salaryId], references: [id])
+
+  mosqueId String? @db.ObjectId
+  mosque   Mosque? @relation(fields: [mosqueId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  userId   String  @db.ObjectId
+  user     User    @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@index([salaryId, userId, mosqueId])
+  @@map("salarypayment")
+}
+
 
 model MonthlySalary {
   id      String   @id @default(auto()) @map("_id") @db.ObjectId
@@ -279,24 +298,6 @@ model MonthlySalary {
   @@map("monthlysalary")
 }
 
-model SalaryPayment {
-  id      String   @id @default(auto()) @map("_id") @db.ObjectId
-  amount  Float
-  payDate DateTime @default(now())
-
-  salaryId String        @db.ObjectId
-  salary   MonthlySalary @relation(fields: [salaryId], references: [id])
-
-  mosqueId String? @db.ObjectId
-  mosque   Mosque? @relation(fields: [mosqueId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  userId   String  @db.ObjectId
-  user     User    @relation(fields: [userId], references: [id])
-
-  createdAt DateTime @default(now())
-
-  @@index([salaryId, userId, mosqueId])
-  @@map("salarypayment")
-}
 
 model Doner {
   id           String    @id @default(auto()) @map("_id") @db.ObjectId

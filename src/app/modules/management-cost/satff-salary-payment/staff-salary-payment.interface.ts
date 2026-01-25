@@ -5,4 +5,5 @@ export interface ISalaryPayment {
   salaryId: string;
   userId: string;
   createdAt?: Date;
+  mosqueId?: string;
 }
