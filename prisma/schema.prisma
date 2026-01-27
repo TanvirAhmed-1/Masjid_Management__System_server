@@ -19,7 +19,7 @@ enum GenderType {
   FEMALE
   OTHERS
 }
-
+// Mosque Model
 model Mosque {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   name      String
@@ -51,7 +51,7 @@ model Mosque {
 
   @@map("mosque")
 }
-
+// User Model
 model User {
   id        String     @id @default(auto()) @map("_id") @db.ObjectId
   name      String
@@ -87,7 +87,7 @@ model User {
   @@index([mosqueId])
   @@map("user")
 }
-
+// Collection=Friday Collection Model
 model FridayCollection {
   id             String   @id @default(auto()) @map("_id") @db.ObjectId
   amount         Float
@@ -105,7 +105,7 @@ model FridayCollection {
   @@index([userId, mosqueId])
   @@map("fridaycollection")
 }
-
+// Collection= Collection Data setup Model
 model OtherCollectionName {
   id          String  @id @default(auto()) @map("_id") @db.ObjectId
   title       String
@@ -124,7 +124,7 @@ model OtherCollectionName {
   @@index([userId, mosqueId])
   @@map("othercollectionname")
 }
-
+// Collection= Collection Data name base collection Model
 model OtherCollection {
   id                    String              @id @default(auto()) @map("_id") @db.ObjectId
   donors                DonerName[]
@@ -145,7 +145,7 @@ model OtherCollection {
   @@index([userId, mosqueId])
   @@map("othercollection")
 }
-
+//ramadan= doner model like ifter doner
 model DonerName {
   id           String          @id @default(auto()) @map("_id") @db.ObjectId
   name         String
@@ -154,7 +154,7 @@ model DonerName {
   collection   OtherCollection @relation(fields: [collectionId], references: [id])
   collectionId String          @db.ObjectId
 }
-
+//ramadan= ramadan year create model
 model RamadanYear {
   id          String       @id @default(auto()) @map("_id") @db.ObjectId
   ramadanYear String
@@ -172,7 +172,7 @@ model RamadanYear {
   @@index([userId, mosqueId])
   @@map("ramadanyear")
 }
-
+//ramadan= ramadan year base ifter list model
 model IfterList {
   id            String  @id @default(auto()) @map("_id") @db.ObjectId
   ramadanyearId String? @db.ObjectId
@@ -191,7 +191,7 @@ model IfterList {
   @@index([userId, mosqueId])
   @@map("ifterlist")
 }
-
+//ramadan= ramadan tarabi salary model
 model RamadantarabiSalary {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
   ramadanYear String
@@ -209,7 +209,7 @@ model RamadantarabiSalary {
   @@index([userId, mosqueId])
   @@map("ramadantarabisalary")
 }
-
+//ramadan= ramadan tarabi salary payment model
 model RamadantarabiSalaryPayment {
   id      String   @id @default(auto()) @map("_id") @db.ObjectId
   amount  Float
@@ -230,7 +230,85 @@ model RamadantarabiSalaryPayment {
   @@index([salaryId, mosqueId, memberId, userId])
   @@map("ramadaniftarsalarypayment")
 }
- // Staff Model
+//ramadan= ifter list  model
+model Doner {
+  id           String    @id @default(auto()) @map("_id") @db.ObjectId
+  serialNumber String
+  name         String
+  iftarDate    DateTime
+  dayName      String
+  ifterListId  String    @db.ObjectId
+  ifterList    IfterList @relation(fields: [ifterListId], references: [id])
+  mosqueId     String?   @db.ObjectId
+  mosque       Mosque?   @relation(fields: [mosqueId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([ifterListId, mosqueId])
+  @@map("doners")
+}
+//ramadan= ramadan year base ifikaf list model
+model IfikafList {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  fromDate  DateTime?
+  toDate    DateTime?
+  ramadanId String    @db.ObjectId
+  userId    String    @db.ObjectId
+
+  ramadanYear RamadanYear @relation(fields: [ramadanId], references: [id])
+  user        User        @relation(fields: [userId], references: [id])
+  mosqueId    String?     @db.ObjectId
+  mosque      Mosque?     @relation(fields: [mosqueId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@index([userId, ramadanId, mosqueId])
+  @@map("ifikaflist")
+}
+
+// mosque management = Member create Model
+model Member {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  name          String
+  phone         String?   @unique
+  address       String?
+  monthlyAmount Float
+  payments      Payment[]
+  createdAt     DateTime  @default(now())
+  userId        String    @db.ObjectId
+  mosqueId      String?   @db.ObjectId
+  mosque        Mosque?   @relation(fields: [mosqueId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  user                        User                         @relation(fields: [userId], references: [id])
+  updatedAt                   DateTime                     @updatedAt
+  ramadantarabiSalaryPayments RamadantarabiSalaryPayment[]
+
+  @@index([userId, createdAt, mosqueId])
+  @@map("member")
+}
+
+// mosque management = Member monthly payment/donate Model
+model Payment {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  memberId String @db.ObjectId
+  member   Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  monthKey String
+  amount   Float
+  paidDate DateTime @default(now())
+
+  userId    String   @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id])
+  mosqueId  String?  @db.ObjectId
+  mosque    Mosque?  @relation(fields: [mosqueId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([memberId, monthKey])
+  @@index([userId, mosqueId, memberId, monthKey])
+  @@map("payment")
+}
+
+ // mosque management = Staff name create Model
 model Staff {
   id         String   @id @default(auto()) @map("_id") @db.ObjectId
   name       String
@@ -256,26 +334,7 @@ model Staff {
   @@map("staff")
 }
 
-model SalaryPayment {
-  id      String   @id @default(auto()) @map("_id") @db.ObjectId
-  amount  Float
-  payDate DateTime @default(now())
-
-  salaryId String        @db.ObjectId
-  salary   MonthlySalary @relation(fields: [salaryId], references: [id])
-
-  mosqueId String? @db.ObjectId
-  mosque   Mosque? @relation(fields: [mosqueId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  userId   String  @db.ObjectId
-  user     User    @relation(fields: [userId], references: [id])
-
-  createdAt DateTime @default(now())
-
-  @@index([salaryId, userId, mosqueId])
-  @@map("salarypayment")
-}
-
-
+// mosque management = Monthly  staff  Salary Model
 model MonthlySalary {
   id      String   @id @default(auto()) @map("_id") @db.ObjectId
   month   DateTime
@@ -298,82 +357,25 @@ model MonthlySalary {
   @@map("monthlysalary")
 }
 
+model SalaryPayment {
+  id      String   @id @default(auto()) @map("_id") @db.ObjectId
+  amount  Float
+  payDate DateTime @default(now())
 
-model Doner {
-  id           String    @id @default(auto()) @map("_id") @db.ObjectId
-  serialNumber String
-  name         String
-  iftarDate    DateTime
-  dayName      String
-  ifterListId  String    @db.ObjectId
-  ifterList    IfterList @relation(fields: [ifterListId], references: [id])
-  mosqueId     String?   @db.ObjectId
-  mosque       Mosque?   @relation(fields: [mosqueId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  salaryId String        @db.ObjectId
+  salary   MonthlySalary @relation(fields: [salaryId], references: [id])
 
-  @@index([ifterListId, mosqueId])
-  @@map("doners")
-}
+  mosqueId String? @db.ObjectId
+  mosque   Mosque? @relation(fields: [mosqueId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  userId   String  @db.ObjectId
+  user     User    @relation(fields: [userId], references: [id])
 
-model IfikafList {
-  id        String    @id @default(auto()) @map("_id") @db.ObjectId
-  name      String
-  fromDate  DateTime?
-  toDate    DateTime?
-  ramadanId String    @db.ObjectId
-  userId    String    @db.ObjectId
-
-  ramadanYear RamadanYear @relation(fields: [ramadanId], references: [id])
-  user        User        @relation(fields: [userId], references: [id])
-  mosqueId    String?     @db.ObjectId
-  mosque      Mosque?     @relation(fields: [mosqueId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-
-  @@index([userId, ramadanId, mosqueId])
-  @@map("ifikaflist")
-}
-
-model Member {
-  id            String    @id @default(auto()) @map("_id") @db.ObjectId
-  name          String
-  phone         String?   @unique
-  address       String?
-  monthlyAmount Float
-  payments      Payment[]
-  createdAt     DateTime  @default(now())
-  userId        String    @db.ObjectId
-  mosqueId      String?   @db.ObjectId
-  mosque        Mosque?   @relation(fields: [mosqueId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-
-  user                        User                         @relation(fields: [userId], references: [id])
-  updatedAt                   DateTime                     @updatedAt
-  ramadantarabiSalaryPayments RamadantarabiSalaryPayment[]
-
-  @@index([userId, createdAt, mosqueId])
-  @@map("member")
-}
-
-model Payment {
-  id       String @id @default(auto()) @map("_id") @db.ObjectId
-  memberId String @db.ObjectId
-  member   Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
-
-  monthKey String
-  amount   Float
-  paidDate DateTime @default(now())
-
-  userId    String   @db.ObjectId
-  user      User     @relation(fields: [userId], references: [id])
-  mosqueId  String?  @db.ObjectId
-  mosque    Mosque?  @relation(fields: [mosqueId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 
-  @@unique([memberId, monthKey])
-  @@index([userId, mosqueId, memberId, monthKey])
-  @@map("payment")
+  @@index([salaryId, userId, mosqueId])
+  @@map("salarypayment")
 }
-
+// mosque management = Member Accessory Purchase Model for masque development purpose
 model MemberAccessoryPurchase {
   id     String @id @default(auto()) @map("_id") @db.ObjectId
   userId String @db.ObjectId

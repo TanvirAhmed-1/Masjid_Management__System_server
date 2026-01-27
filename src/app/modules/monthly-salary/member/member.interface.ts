@@ -4,6 +4,7 @@ export type TMember = {
   address?: string;
   monthlyAmount: number;
   createdAt?: Date;
+  mosqueId: string;
   updatedAt?: Date;
   userId: string;
 };

@@ -62,9 +62,6 @@ const getAllSalaryPaymentDB = async (query: any) => {
     orderBy: {
       [sortBy]: sortOrder,
     },
-    include: {
-      staff: true,
-    },
   });
   const total = await prisma.salaryPayment.count({ where: whereCondition });
   return {

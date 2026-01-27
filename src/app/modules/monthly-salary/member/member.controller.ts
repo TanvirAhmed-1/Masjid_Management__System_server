@@ -4,7 +4,8 @@ import { memberServices } from "./member.services";
 
 const createMember = catchAsync(async (req, res) => {
   const userId = req.user!.id;
-  const payload = { ...req.body, userId };
+  const mosqueId = req.user?.mosqueId;
+  const payload = { ...req.body, userId, mosqueId };
   const result = await memberServices.createMemberDB(payload);
 
   res.status(httpStatus.CREATED).json({
@@ -16,7 +17,11 @@ const createMember = catchAsync(async (req, res) => {
 });
 
 const getMembers = catchAsync(async (req, res) => {
-  const result = await memberServices.getAllMembersDB();
+  const mosqueId = req.user?.mosqueId;
+  const result = await memberServices.getAllMembersDB({
+    mosqueId,
+    ...req.query,
+  });
   res.status(httpStatus.OK).json({
     success: true,
     statusCode: 200,
