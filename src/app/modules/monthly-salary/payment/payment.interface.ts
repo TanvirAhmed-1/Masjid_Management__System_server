@@ -4,6 +4,7 @@ export type TCreatePayment = {
   memberId: string;
   monthKey: string;     // "2025-01"
   amount: number;
+  mosqueId: string;
 };
 
 export type TPayment = TCreatePayment & {
