@@ -6,5 +6,4 @@ export const createMonthlySalaryValidation = z.object({
   }),
   staffId: z.string().min(1, "Staff ID is required"),
   totalSalary: z.number().positive("Total salary must be a positive number"),
-  userId: z.string().min(1, "User ID is required"),
 });

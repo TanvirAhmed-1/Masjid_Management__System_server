@@ -20,12 +20,12 @@ router.get(
   paymentController.getMemberSummary,
 );
 router.get(
-  "/payments/month/:monthKey",
+  "/payments/summary/:year",
 
-  paymentController.getMonthlyReport,
+  paymentController.getYearlyReport,
 );
 router.get("/payments", paymentController.getAllPayments);
-
+router.put("/payments/:id", paymentController.updatePayment);
 router.delete("/payments/:paymentId", paymentController.deletePayment);
 
 export const paymentRoutes = router;

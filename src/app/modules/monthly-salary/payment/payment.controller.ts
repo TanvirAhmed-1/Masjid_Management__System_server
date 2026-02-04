@@ -1,4 +1,3 @@
-// src/modules/payment/payment.controller.ts
 import httpStatus from "http-status";
 import catchAsync from "../../../utils/catchAsync";
 import { paymentService } from "./payment.services";
@@ -34,17 +33,21 @@ const getMemberSummary = catchAsync(async (req, res) => {
   });
 });
 
-const getMonthlyReport = catchAsync(async (req, res) => {
+const getYearlyReport = catchAsync(async (req, res) => {
   const mosqueId = req.user?.mosqueId;
-  const { monthKey } = req.params;
-  const result = await paymentService.getMonthlyCollection({
-    monthKey,
+  const year = req.params.year;
+   const { page, limit } = req.query;
+
+  const result = await paymentService.getYearlyCollection({
+    year,
     mosqueId,
+    page: Number(page),
+    limit: Number(limit),
   });
 
   res.status(httpStatus.OK).json({
     success: true,
-    message: `Successfully fetched collection report for ${monthKey}`,
+    message: `Successfully fetched year base payment`,
     data: result,
   });
 });
@@ -62,8 +65,29 @@ const getAllPayments = catchAsync(async (req, res) => {
   });
 });
 
+const updatePayment = catchAsync(async (req, res) => {
+  const id = req.params.id;
+  const mosqueId = req.user?.mosqueId;
+
+  const { memberId, monthKey, amount } = req.body;
+
+  const result = await paymentService.updatePaymentDB({
+    id,
+    mosqueId,
+    data: { memberId, monthKey, amount },
+  });
+
+  res.status(httpStatus.OK).json({
+    success: true,
+    message: "Successfully updated payment",
+    data: result,
+  });
+});
+
 const deletePayment = catchAsync(async (req, res) => {
-  const result = await paymentService.deletePaymentBD(req.params.paymentId);
+  const paymentId = req.params.paymentId;
+  const mosqueId = req.user?.mosqueId;
+  const result = await paymentService.deletePaymentBD(paymentId, mosqueId);
   res.status(httpStatus.OK).json({
     success: true,
     message: "Successfully deleted payment",
@@ -74,7 +98,8 @@ const deletePayment = catchAsync(async (req, res) => {
 export const paymentController = {
   createPayment,
   getMemberSummary,
-  getMonthlyReport,
+  getYearlyReport,
   getAllPayments,
+  updatePayment,
   deletePayment,
 };

@@ -14,7 +14,7 @@ const createsatff = catchAsync(async (req, res) => {
     userId: userid,
     mosqueId,
   };
-  
+
   const result = await staffServices.createstffDB(payload);
   res.status(httpStatus.CREATED).json({
     success: true,
@@ -44,8 +44,25 @@ const getstaffById = catchAsync(async (req, res) => {
 });
 const updatestaff = catchAsync(async (req, res) => {
   const { id } = req.params;
+  const mosqueId = req.user?.mosqueId;
   const data = req.body;
-  const result = await staffServices.updatestaffDB(id, data);
+  const result = await staffServices.updatestaffDB(id, data, mosqueId);
+  res.status(httpStatus.OK).json({
+    success: true,
+    message: "staff updated successfully",
+    result,
+  });
+});
+
+const updatestaffStatus = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const mosqueId = req.user?.mosqueId;
+  const { status } = req.body;
+  if (typeof status !== "boolean") {
+    throw new Error("Status must be boolean");
+  }
+  const data = status;
+  const result = await staffServices.updatestaffStatusDB(id, data, mosqueId);
   res.status(httpStatus.OK).json({
     success: true,
     message: "staff updated successfully",
@@ -55,7 +72,8 @@ const updatestaff = catchAsync(async (req, res) => {
 
 const deletestaff = catchAsync(async (req, res) => {
   const { id } = req.params;
-  const result = await staffServices.deletestaffDB(id);
+  const mosqueId = req.user?.mosqueId;
+  const result = await staffServices.deletestaffDB(id, mosqueId);
   res.status(httpStatus.OK).json({
     success: true,
     message: "staff deleted successfully",
@@ -68,4 +86,5 @@ export const satffController = {
   getstaffById,
   updatestaff,
   deletestaff,
+  updatestaffStatus,
 };

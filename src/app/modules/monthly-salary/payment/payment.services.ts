@@ -3,7 +3,6 @@ import prisma from "../../../utils/prisma";
 import { TCreatePayment, TMemberPaymentSummary } from "./payment.interface";
 
 class PaymentService {
-  // Add a payment
   async createPayment(payload: TCreatePayment & { userId: string }) {
     const { mosqueId, userId, memberId } = payload;
     if (!userId) {
@@ -98,47 +97,145 @@ class PaymentService {
     };
   }
 
-  async getMonthlyCollection({
-    monthKey,
+  async getYearlyCollection({
+    year,
     mosqueId,
+    page,
+    limit,
   }: {
-    monthKey: string;
+    year: string;
     mosqueId?: string;
+    page?: number;
+    limit?: number;
   }) {
     if (!mosqueId) throw new Error("Mosque ID is required");
-    if (!monthKey) throw new Error("Month key is required");
+    if (!year) throw new Error("Year is required");
 
-    const payments = await prisma.payment.findMany({
-      where: {
-        monthKey,
-        member: {
-          mosqueId,
-        },
-      },
-      include: {
-        member: {
-          select: { name: true, phone: true, monthlyAmount: true },
-        },
-      },
-      orderBy: { paidDate: "desc" },
+    const safePage = Number(page) > 0 ? Number(page) : 1;
+    const safeLimit = Number(limit) > 0 ? Number(limit) : 10;
+
+    const skip = (safePage - 1) * safeLimit;
+    const take = safeLimit;
+
+    const total = await prisma.member.count({
+      where: { mosqueId },
     });
 
-    const totalAmount = payments.reduce((sum, p) => sum + p.amount, 0);
+    const members = await prisma.member.findMany({
+      where: { mosqueId },
+      skip,
+      take,
+      select: {
+        id: true,
+        name: true,
+        phone: true,
+        monthlyAmount: true,
+        payments: {
+          where: {
+            monthKey: {
+              startsWith: year,
+            },
+          },
+          select: {
+            id: true,
+            monthKey: true,
+            amount: true,
+            paidDate: true,
+          },
+          orderBy: {
+            monthKey: "asc",
+          },
+        },
+      },
+      orderBy: {
+        name: "asc",
+      },
+    });
 
     return {
-      monthKey,
-      totalMembersPaid: payments.length,
-      totalAmount,
-      payments,
+      meta: {
+        total,
+        page: safePage,
+        limit: safeLimit,
+        totalPage: Math.ceil(total / safeLimit),
+      },
+      result: members,
     };
   }
 
-  async deletePaymentBD(paymentId: string) {
+  async deletePaymentBD(paymentId: string, mosqueId?: string) {
     if (!paymentId) {
       throw new Error("Payment ID is required");
     }
+    if (!mosqueId) {
+      throw new Error("Mosque ID is required");
+    }
+    const payment = await prisma.payment.findFirst({
+      where: {
+        id: paymentId,
+        mosqueId,
+      },
+    });
+
+    if (!payment) throw new Error("Payment not found");
+
     return await prisma.payment.delete({ where: { id: paymentId } });
   }
+
+  async updatePaymentDB({
+    id,
+    mosqueId,
+    data,
+  }: {
+    id: string;
+    mosqueId?: string;
+    data: {
+      memberId?: string;
+      monthKey?: string;
+      amount?: number;
+    };
+  }) {
+    if (!id) throw new Error("Payment ID is required");
+    if (!mosqueId) throw new Error("Mosque ID is required");
+
+    const existingPayment = await prisma.payment.findFirst({
+      where: {
+        id,
+        mosqueId,
+      },
+    });
+
+    if (!existingPayment) {
+      throw new Error("Payment not found");
+    }
+
+    if (data.memberId && data.monthKey) {
+      const duplicate = await prisma.payment.findFirst({
+        where: {
+          mosqueId,
+          memberId: data.memberId,
+          monthKey: data.monthKey,
+          NOT: { id },
+        },
+      });
+
+      if (duplicate) {
+        throw new Error(
+          `Payment for ${data.monthKey} already exists for this member`,
+        );
+      }
+    }
+
+    return await prisma.payment.update({
+      where: { id },
+      data: {
+        ...(data.memberId && { memberId: data.memberId }),
+        ...(data.monthKey && { monthKey: data.monthKey }),
+        ...(data.amount !== undefined && { amount: data.amount }),
+      },
+    });
+  }
+
   async getAllPayments(query: any) {
     const {
       mosqueId,
@@ -146,6 +243,11 @@ class PaymentService {
       page = 1,
       sortBy = "createdAt",
       sortOrder,
+      name,
+      phone,
+      form,
+      to,
+      monthKey,
     } = query;
     if (!mosqueId) {
       throw new Error("Mosque ID is required");
@@ -154,14 +256,34 @@ class PaymentService {
     const take = Number(limit);
 
     const whereCondition: any = { mosqueId };
+
+    if (monthKey) {
+      whereCondition.monthKey = monthKey;
+    }
+    if (name) {
+      whereCondition.member = { name: { contains: name, mode: "insensitive" } };
+    }
+    if (phone) {
+      whereCondition.member = {
+        phone: { contains: phone, mode: "insensitive" },
+      };
+    }
+    if (form && to) {
+      whereCondition.paidDate = {
+        gte: new Date(form),
+        lte: new Date(to),
+      };
+    }
+
     const result = await prisma.payment.findMany({
       where: whereCondition,
       skip,
       take,
       orderBy: { [sortBy]: sortOrder },
       include: {
-        member: { select: { name: true, phone: true } },
-        user: { select: { name: true } },
+        member: {
+          select: { name: true, phone: true, monthlyAmount: true, id: true },
+        },
       },
     });
     const total = await prisma.payment.count({ where: whereCondition });
@@ -175,14 +297,6 @@ class PaymentService {
       },
       data: result,
     };
-
-    // return await prisma.payment.findMany({
-    //   include: {
-    //     member: { select: { name: true, phone: true } },
-    //     user: { select: { name: true } },
-    //   },
-    //   orderBy: { paidDate: "desc" },
-    // });
   }
 }
 

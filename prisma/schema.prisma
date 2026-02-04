@@ -338,10 +338,11 @@ model Staff {
 model MonthlySalary {
   id      String   @id @default(auto()) @map("_id") @db.ObjectId
   month   DateTime
+
   staffId String   @db.ObjectId
   staff   Staff    @relation(fields: [staffId], references: [id])
 
-  totalSalary Float // Full salary amount for the month
+  totalSalary Float 
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -352,10 +353,10 @@ model MonthlySalary {
 
   payments SalaryPayment[]
 
-  @@unique([month, staffId]) // Prevent duplicate month salary
+  @@unique([month, staffId])
   @@index([staffId, mosqueId])
   @@map("monthlysalary")
-}
+} 
 
 model SalaryPayment {
   id      String   @id @default(auto()) @map("_id") @db.ObjectId

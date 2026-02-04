@@ -4,7 +4,13 @@ import catchAsync from "../../../utils/catchAsync";
 
 const createMonthlySalary = catchAsync(async (req, res) => {
   const data = req.body;
-  const result = await monthlySalaryServices.createMonthlySalary(data);
+  const userId = req.user?.id;
+  const mosqueId = req.user?.mosqueId;
+  const result = await monthlySalaryServices.createMonthlySalary(
+    data,
+    userId,
+    mosqueId,
+  );
   res.status(httpStatus.CREATED).json({
     success: true,
     message: "Monthly Salary created successfully",
@@ -13,7 +19,11 @@ const createMonthlySalary = catchAsync(async (req, res) => {
 });
 
 const getAllMonthlySalaries = catchAsync(async (req, res) => {
-  const result = await monthlySalaryServices.getAllMonthlySalaries();
+  const mosqueId = req.user?.mosqueId;
+  const result = await monthlySalaryServices.getAllMonthlySalaries({
+    mosqueId,
+    ...req.query,
+  });
   res.json({
     success: true,
     message: "Monthly salaries fetched successfully",
@@ -36,7 +46,7 @@ const updateMonthlySalary = catchAsync(async (req, res) => {
   const data = req.body;
   const result = await monthlySalaryServices.updateMonthlySalary(
     salaryId,
-    data
+    data,
   );
   res.json({
     success: true,

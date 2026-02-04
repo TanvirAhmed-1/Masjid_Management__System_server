@@ -14,6 +14,8 @@ router.get("/staffs", satffController.getAllstaff);
 
 router.get("/staffs/:id", satffController.getstaffById);
 
+router.put("/staffs/status/:id", satffController.updatestaffStatus);
+
 router.put("/staffs/:id", satffController.updatestaff);
 
 router.delete("/staffs/:id", satffController.deletestaff);

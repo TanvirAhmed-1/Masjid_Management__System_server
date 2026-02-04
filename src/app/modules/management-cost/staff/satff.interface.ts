@@ -8,4 +8,5 @@ export interface IStaff {
   baseSalary: number;
   joinDate?: Date;
   active?: boolean;
+  mosqueId?: string;
 }

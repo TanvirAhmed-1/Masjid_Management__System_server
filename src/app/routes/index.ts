@@ -12,6 +12,7 @@ import { otherCollectionRoutes } from "../modules/collection/other-collection/ot
 import { mosqueRoutes } from "../modules/mosque/mosque.route";
 import { staffRoutes } from "../modules/management-cost/staff/satff.route";
 import { staffSalaryPaymentRoutes } from "../modules/management-cost/satff-salary-payment/staff-salary-payment.route";
+import { monthlySalaryRoutes } from "../modules/management-cost/monthly-salary/monthly-salary.route";
 const router = Router();
 
 const allRouters = [
@@ -28,6 +29,7 @@ const allRouters = [
   otherCollectionRoutes,
   staffRoutes,
   staffSalaryPaymentRoutes,
+  monthlySalaryRoutes,
 ];
 
 allRouters.forEach((route) => router.use(route));

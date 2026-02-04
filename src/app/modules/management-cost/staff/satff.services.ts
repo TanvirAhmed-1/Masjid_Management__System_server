@@ -2,6 +2,8 @@ import prisma from "../../../utils/prisma";
 import { IStaff } from "./satff.interface";
 
 const createstffDB = async (payload: IStaff) => {
+  const { mosqueId } = payload;
+  if (!mosqueId) throw new Error("Mosque ID is required");
   return await prisma.staff.create({
     data: payload,
   });
@@ -60,16 +62,35 @@ const getstaffByIdDB = async (id: string) => {
     where: { id },
   });
 };
-const updatestaffDB = async (id: string, payload: Partial<IStaff>) => {
+const updatestaffDB = async (
+  id: string,
+  payload: Partial<IStaff>,
+  mosqueId?: string,
+) => {
+  if (!mosqueId) throw new Error("Mosque ID is required");
   if (!id) throw new Error("Id is required");
   return await prisma.staff.update({
-    where: { id },
+    where: { id, mosqueId },
     data: payload,
   });
 };
 
-const deletestaffDB = async (id: string) => {
-  const staff = await prisma.staff.findUnique({ where: { id } });
+const updateStatus = async (
+  id: string,
+  status?: boolean,
+  mosqueId?: string,
+) => {
+  if (!mosqueId) throw new Error("Mosque ID is required");
+  if (!id) throw new Error("Id is required");
+  return await prisma.staff.update({
+    where: { id, mosqueId },
+    data: { active: status },
+  });
+};
+const deletestaffDB = async (id: string, mosqueId?: string) => {
+  if (!id) throw new Error("Id is required");
+  if (!mosqueId) throw new Error("Mosque ID is required");
+  const staff = await prisma.staff.findUnique({ where: { id, mosqueId } });
   if (!staff) throw new Error("Staff not found");
 
   return await prisma.staff.delete({ where: { id } });
@@ -79,5 +100,6 @@ export const staffServices = {
   getAllstaffDB,
   getstaffByIdDB,
   updatestaffDB,
+  updatestaffStatusDB: updateStatus,
   deletestaffDB,
 };

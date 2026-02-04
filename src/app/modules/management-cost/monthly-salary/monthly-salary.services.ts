@@ -1,12 +1,44 @@
 import prisma from "../../../utils/prisma";
 import { IMonthlySalary } from "./monthly-salary.interface";
 
-const createMonthlySalary = async (data: IMonthlySalary) => {
+const createMonthlySalary = async (
+  data: IMonthlySalary,
+  userId?: string,
+  mosqueId?: string,
+) => {
+  if (!mosqueId) {
+    throw new Error("Mosque ID is required");
+  }
+  if (!userId) {
+    throw new Error("User ID is required");
+  }
+  if (!data.staffId) {
+    throw new Error("Staff ID is required");
+  }
+
   const result = await prisma.monthlySalary.create({
-    data,
+    data: {
+      month: new Date(data.month),
+      totalSalary: data.totalSalary,
+      staff: {
+        connect: {
+          id: data.staffId,
+        },
+      },
+      user: {
+        connect: {
+          id: userId,
+        },
+      },
+
+      mosque: {
+        connect: {
+          id: mosqueId,
+        },
+      },
+    },
     include: {
       staff: true,
-      user: true,
       payments: true,
     },
   });
@@ -14,14 +46,59 @@ const createMonthlySalary = async (data: IMonthlySalary) => {
   return result;
 };
 
-const getAllMonthlySalaries = async () => {
-  return await prisma.monthlySalary.findMany({
+const getAllMonthlySalaries = async (query: any) => {
+  const {
+    mosqueId,
+    page = 1,
+    limit = 20,
+    orderBy = "desc",
+    sortBy = "createdAt",
+    name,
+    phone,
+    active,
+  } = query;
+  if (!mosqueId) throw new Error("Mosque ID is required");
+
+  const skip = (Number(page) - 1) * Number(limit);
+  const take = Number(limit);
+
+  const whereCondition: any = { mosqueId };
+  if (name) {
+    whereCondition.name = { contains: name, mode: "insensitive" };
+  }
+  if (phone) {
+    whereCondition.phone = { contains: phone, mode: "insensitive" };
+  }
+  if (active) {
+    whereCondition.active = active;
+  }
+
+  const result = await prisma.monthlySalary.findMany({
+    where: whereCondition,
+    skip,
+    take,
+    orderBy: {
+      [sortBy]: orderBy,
+    },
     include: {
       staff: true,
-      user: true,
       payments: true,
     },
   });
+
+  const total = await prisma.monthlySalary.count({
+    where: whereCondition,
+  });
+
+  return {
+    meta: {
+      total,
+      page,
+      limit,
+      totalPage: Math.ceil(total / limit),
+    },
+    data: result,
+  };
 };
 
 const getMonthlySalaryById = async (salaryId: string) => {
