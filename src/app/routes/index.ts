@@ -9,14 +9,16 @@ import { ramadanTarabiSalaryRoutes } from "../modules/ramadan/ramadan-tarabi-sal
 import { fridayCollectionRoutes } from "../modules/collection/friday-collection/friday-collection.route";
 import { otherCollectionNameRoutes } from "../modules/collection/collection-datasetUp-Name/otherCollectionName.route";
 import { otherCollectionRoutes } from "../modules/collection/other-collection/other-collection.route";
-import { mosqueRoutes } from "../modules/mosque/mosque.route";
+import { mosqueRoutes } from "../modules/mosqueManagement/mosque/mosque.route";
 import { staffRoutes } from "../modules/management-cost/staff/satff.route";
 import { staffSalaryPaymentRoutes } from "../modules/management-cost/satff-salary-payment/staff-salary-payment.route";
 import { monthlySalaryRoutes } from "../modules/management-cost/monthly-salary/monthly-salary.route";
+import { mosquememberRoutes } from "../modules/mosqueManagement/member/member.route";
 const router = Router();
 
 const allRouters = [
   userRoute,
+  mosquememberRoutes,
   mosqueRoutes,
   ramadanDataSetUpRoute,
   itikaRoutes,

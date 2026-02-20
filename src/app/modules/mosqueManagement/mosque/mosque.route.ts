@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { mosqueController } from "./mosque.controller";
-import validateRequest from "../../middlewares/validateRequest";
-import { auth } from "../../middlewares/auth.middleware";
+import validateRequest from "../../../middlewares/validateRequest";
+import { auth } from "../../../middlewares/auth.middleware";
 import { createMosqueWithAdminSchema } from "./mosque.validation";
 
 const router = Router();
@@ -12,7 +12,7 @@ router.get("/mosques", mosqueController.getAllMosques);
 router.post(
   "/mosques",
   validateRequest(createMosqueWithAdminSchema),
-  mosqueController.createmosque
+  mosqueController.createmosque,
 );
 router.get("/mosques/:id", mosqueController.getMosqueById);
 router.put("/mosques/:id", mosqueController.updateMosque);

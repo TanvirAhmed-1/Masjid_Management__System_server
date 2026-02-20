@@ -277,7 +277,7 @@ model Member {
   userId        String    @db.ObjectId
   mosqueId      String?   @db.ObjectId
   mosque        Mosque?   @relation(fields: [mosqueId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-
+ 
   user                        User                         @relation(fields: [userId], references: [id])
   updatedAt                   DateTime                     @updatedAt
   ramadantarabiSalaryPayments RamadantarabiSalaryPayment[]

@@ -1,11 +1,7 @@
-// validations/createMosqueWithAdmin.validation.ts
+
 
 import z from "zod";
-
-// Prisma-এর সাথে মিল রেখে OTHERS যোগ করলাম
 const GenderType = z.enum(["MALE", "FEMALE", "OTHERS"]);
-
-// পাসওয়ার্ড ভ্যালিডেশন
 const passwordValidation = z
   .string()
   .min(6, "Password must be at least 6 characters")

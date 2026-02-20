@@ -1,18 +1,18 @@
-import prisma from "../../utils/prisma";
+import prisma from "../../../utils/prisma";
 import { CreateMosqueWithAdminInput } from "./mosque.interface";
 
 import bcrypt from "bcrypt";
 
 const createMosqueWithAdminDB = async (
   payload: CreateMosqueWithAdminInput,
-  superAdminId: string
+  superAdminId: string,
 ) => {
   const { mosque, admin } = payload;
 
   const hashedPassword = await bcrypt.hash(admin.password, 12);
 
   return await prisma.$transaction(async (tx) => {
-    // 1️⃣ Create Mosque
+    //  Create Mosque
     const createdMosque = await tx.mosque.create({
       data: {
         ...mosque,
@@ -20,7 +20,7 @@ const createMosqueWithAdminDB = async (
       },
     });
 
-    // 2️⃣ Create Admin User
+    //  Create Admin User
     const createdAdmin = await tx.user.create({
       data: {
         name: admin.name,
@@ -56,7 +56,7 @@ const getMosqueByIdDB = async (id: string) => {
 
 const updateMosqueDB = async (
   id: string,
-  payload: Partial<CreateMosqueWithAdminInput["mosque"]>
+  payload: Partial<CreateMosqueWithAdminInput["mosque"]>,
 ) => {
   return await prisma.mosque.update({ where: { id }, data: payload });
 };

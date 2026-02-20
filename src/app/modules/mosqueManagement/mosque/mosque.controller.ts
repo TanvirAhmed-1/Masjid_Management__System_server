@@ -1,5 +1,5 @@
 import httpStatus from "http-status";
-import catchAsync from "../../utils/catchAsync";
+import catchAsync from "../../../utils/catchAsync";
 import { mosqueServices } from "./mosque.services";
 
 const createmosque = catchAsync(async (req, res) => {
@@ -10,7 +10,7 @@ const createmosque = catchAsync(async (req, res) => {
 
   const result = await mosqueServices.createMosqueWithAdminDB(
     payload,
-    superAdminId
+    superAdminId,
   );
 
   res.status(httpStatus.CREATED).json({
