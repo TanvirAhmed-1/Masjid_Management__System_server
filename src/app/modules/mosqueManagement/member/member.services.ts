@@ -9,7 +9,7 @@ const createMemberDB = async (payload: ICreateMemberInput, userId: string) => {
   // password hash
   const hashedPassword = await bcrypt.hash(password, 12);
 
-  return await prisma.$transaction(async (tx) => {
+  return await prisma.$transaction(async (tx: any) => {
     const createdMember = await tx.user.create({
       data: {
         ...rest,

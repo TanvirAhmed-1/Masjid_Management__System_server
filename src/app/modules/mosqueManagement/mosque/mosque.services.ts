@@ -11,7 +11,7 @@ const createMosqueWithAdminDB = async (
 
   const hashedPassword = await bcrypt.hash(admin.password, 12);
 
-  return await prisma.$transaction(async (tx) => {
+  return await prisma.$transaction(async (tx: any) => {
     //  Create Mosque
     const createdMosque = await tx.mosque.create({
       data: {

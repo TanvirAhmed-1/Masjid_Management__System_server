@@ -14,6 +14,9 @@ import { staffRoutes } from "../modules/management-cost/staff/satff.route";
 import { staffSalaryPaymentRoutes } from "../modules/management-cost/satff-salary-payment/staff-salary-payment.route";
 import { monthlySalaryRoutes } from "../modules/management-cost/monthly-salary/monthly-salary.route";
 import { mosquememberRoutes } from "../modules/mosqueManagement/member/member.route";
+import { dashboardRoutes } from "../modules/dashboard/Dashboard.routes";
+import { accessoryPurchaseRoutes } from "../modules/monthly-salary/accessoryPurchase/accessory.routers";
+
 const router = Router();
 
 const allRouters = [
@@ -32,6 +35,8 @@ const allRouters = [
   staffRoutes,
   staffSalaryPaymentRoutes,
   monthlySalaryRoutes,
+  dashboardRoutes,
+  accessoryPurchaseRoutes,
 ];
 
 allRouters.forEach((route) => router.use(route));

@@ -78,7 +78,7 @@ class PaymentService {
     const dueMonths = totalMonthsShouldPay - paidMonths;
     const totalDue = dueMonths * member.monthlyAmount;
 
-    const paidMonthKeys = member.payments.map((p) => p.monthKey);
+    const paidMonthKeys = member.payments.map((p: any) => p.monthKey);
 
     return {
       member: {
