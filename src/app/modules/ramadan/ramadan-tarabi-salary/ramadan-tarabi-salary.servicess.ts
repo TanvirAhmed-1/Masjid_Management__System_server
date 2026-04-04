@@ -1,127 +1,111 @@
 import prisma from "../../../utils/prisma";
-import {
-  IRamadanIftarSalaryPayment,
-  IRamadanIftarSalary,
-} from "./ramadan-tarabi-salary.interface";
+import { IRamadanTarabiPayment } from "./ramadan-tarabi-salary.interface";
 
-// Ramadan Iftar Salary Service
-
-const createSalary = async (payload: IRamadanIftarSalary) => {
-  const salary = await prisma.ramadantarabiSalary.create({
-    data: {
-      ramadanYear: payload.ramadanYear,
-      totalSalary: payload.totalSalary,
-      userId: payload.userId,
-    },
+const createPaymentDB = async (payload: IRamadanTarabiPayment) => {
+  return await prisma.ramadanTarabiPayment.create({
+    data: payload,
   });
-  return salary;
 };
 
-// Fetch all salaries
+const getAllPaymentsDB = async (query: any) => {
+  const {
+    ramadanYearId,
+    memberId,
+    form,
+    to,
+    limit = 20,
+    page = 1,
+    sortBy = "createdAt",
+    sortOrder = "desc",
+    mosqueId,
+  } = query;
 
-const fetchSalaries = async () => {
-  const salaries = await prisma.ramadantarabiSalary.findMany({
-    include: {
-      payments: {
-        include: { member: true },
+  if (!mosqueId) {
+    throw new Error("Mosque ID is required");
+  }
+
+  // 1. Setup Pagination values
+  const pageNumber = Math.max(Number(page), 1);
+  const limitNumber = Math.max(Number(limit), 1);
+  const skip = (pageNumber - 1) * limitNumber;
+
+  // 2. Build where conditions
+  const whereCondition: any = {
+    mosqueId,
+  };
+
+  if (ramadanYearId) whereCondition.ramadanYearId = ramadanYearId;
+  if (memberId) whereCondition.memberId = memberId;
+
+  // Date Range Filtering
+  if (form || to) {
+    whereCondition.payDate = {};
+    if (form) whereCondition.payDate.gte = new Date(form);
+    if (to) whereCondition.payDate.lte = new Date(to);
+  }
+
+  // 3. Execute count and findMany in parallel for better performance
+  const [data, total] = await Promise.all([
+    prisma.ramadanTarabiPayment.findMany({
+      where: whereCondition,
+      include: {
+        member: true,
+        ramadanYear: true,
       },
-    },
-  });
-  return salaries;
-};
-
-// Fetch salary by ID
-const fetchSalaryById = async (salaryId: string) => {
-  const salary = await prisma.ramadantarabiSalary.findUnique({
-    where: { id: salaryId },
-    include: {
-      payments: {
-        include: { member: true },
+      skip,
+      take: limitNumber,
+      orderBy: {
+        [sortBy]: sortOrder,
       },
+    }),
+    prisma.ramadanTarabiPayment.count({
+      where: whereCondition,
+    }),
+  ]);
+
+  // 4. Return the structure matching your frontend's expected JSON
+  return {
+    meta: {
+      page: pageNumber,
+      limit: limitNumber,
+      total,
+      totalPage: Math.ceil(total / limitNumber),
     },
+    data,
+  };
+};
+const getPaymentByIdDB = async (id: string) => {
+  return await prisma.ramadanTarabiPayment.findUnique({
+    where: { id },
+    include: { member: true, ramadanYear: true },
   });
-  return salary;
 };
 
-// add a payment
-const addPayment = async (payload: IRamadanIftarSalaryPayment) => {
-  const payment = await prisma.ramadantarabiSalaryPayment.create({
-    data: {
-      amount: payload.amount,
-      salaryId: payload.salaryId,
-      memberId: payload.memberId,
-      userId: payload.userId,
-    },
+const updatePaymentDB = async (
+  id: string,
+  payload: Partial<IRamadanTarabiPayment>,
+) => {
+  const existingPayment = await prisma.ramadanTarabiPayment.findUnique({
+    where: { id },
   });
-  return payment;
+  if (!existingPayment) throw new Error("Payment not found");
+  
+  return await prisma.ramadanTarabiPayment.update({
+    where: { id },
+    data: payload,
+  });
 };
 
-// Update a payment
-
-const updatePayment = async (paymentId: string, amount: number) => {
-  const payment = await prisma.ramadantarabiSalaryPayment.update({
-    where: { id: paymentId },
-    data: { amount },
+const deletePaymentDB = async (id: string) => {
+  return await prisma.ramadanTarabiPayment.delete({
+    where: { id },
   });
-  return payment;
 };
 
-// Delete a payment
-
-const deletePayment = async (paymentId: string) => {
-  const payment = await prisma.ramadantarabiSalaryPayment.delete({
-    where: { id: paymentId },
-  });
-  return payment;
-};
-
-// Get Member Payment Summary (total paid, remaining)
-
-const getMemberPaymentStatus = async (salaryId: string) => {
-  const salary = await prisma.ramadantarabiSalary.findUnique({
-    where: { id: salaryId },
-    include: {
-      user: {
-        include: { members: true },
-      },
-      payments: true,
-    },
-  });
-
-  if (!salary) throw new Error("Salary not found");
-
-  const members = salary.user.members;
-
-  const result = members.map((member) => {
-    const memberPayments = salary.payments.filter(
-      (p) => p.memberId === member.id
-    );
-    const totalPaid = memberPayments.reduce((sum, p) => sum + p.amount, 0);
-    const remaining = member.monthlyAmount - totalPaid;
-
-    return {
-      memberId: member.id,
-      memberName: member.name,
-      totalAmount: member.monthlyAmount,
-      totalPaid,
-      remaining,
-      payments: memberPayments.map((p) => ({
-        paymentId: p.id,
-        amount: p.amount,
-        payDate: p.payDate,
-      })),
-    };
-  });
-
-  return result;
-};
-
-export const RamadanIftarSalaryService = {
-  createSalary,
-  fetchSalaries,
-  fetchSalaryById,
-  addPayment,
-  updatePayment,
-  deletePayment,
-  getMemberPaymentStatus,
+export const RamadanTarabiPaymentService = {
+  createPaymentDB,
+  getAllPaymentsDB,
+  getPaymentByIdDB,
+  updatePaymentDB,
+  deletePaymentDB,
 };

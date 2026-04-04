@@ -1,37 +1,29 @@
 import { Router } from "express";
-import { ramadanIftarSalaryController } from "./ramadan-tarabi-salary.controller";
+import validateRequest from "../../../middlewares/validateRequest";
+import { RamadanTarabiPaymentValidation } from "./ramadan-tarabi-salary.validation";
 import { auth } from "../../../middlewares/auth.middleware";
+import { ramadanTarabiPaymentController } from "./ramadan-tarabi-salary.controller";
 
 const router = Router();
 
 router.use(auth());
 
-// Get a salary by ID
-router.get(
-  "/tarabi-salary/:salaryId",
-  ramadanIftarSalaryController.getRamadanIftarSalary
-);
-// Get all salaries
-router.get("/tarabi-salary", ramadanIftarSalaryController.getAllPayments);
-// Create a new Ramadan Iftar Salary
 router.post(
-  "/tarabi-salary",
-  ramadanIftarSalaryController.addRamadanIftarSalaryPayment
+  "/tarabi-payments",
+  validateRequest(RamadanTarabiPaymentValidation.create),
+  ramadanTarabiPaymentController.createPayment
 );
 
-// Add a payment for a member
-router.post("/tarabi-salary/payment", ramadanIftarSalaryController.addPayment);
+router.get("/tarabi-payments", ramadanTarabiPaymentController.getAllPayments);
 
-// Update a payment
+router.get("/tarabi-payments/:id", ramadanTarabiPaymentController.getPaymentById);
+
 router.put(
-  "/tarabi-salary/payment/:paymentId",
-  ramadanIftarSalaryController.updatePayment
+  "/tarabi-payments/:id",
+  validateRequest(RamadanTarabiPaymentValidation.update),
+  ramadanTarabiPaymentController.updatePayment
 );
 
-// Delete a payment
-router.delete(
-  "/tarabi-salary/payment/:paymentId",
-  ramadanIftarSalaryController.deletePayment
-);
+router.delete("/tarabi-payments/:id", ramadanTarabiPaymentController.deletePayment);
 
-export const ramadanTarabiSalaryRoutes = router;
+export const ramadanTarabiPaymentRoutes = router;

@@ -146,6 +146,24 @@ class PaymentService {
             monthKey: "asc",
           },
         },
+        tarabiPayments: {
+          where: {
+            ramadanYear: {
+              ramadanYear: year,
+            },
+          },
+          select: {
+            id: true,
+            amount: true,
+            payDate: true,
+            ramadanYear: {
+              select: {
+                ramadanYear: true,
+                titleName: true,
+              },
+            },
+          },
+        },
       },
       orderBy: {
         name: "asc",

@@ -1,20 +1,9 @@
-// ramadan-iftar-salary.interface.ts
-
-export interface IRamadanIftarSalary {
-  id?: string;
-  ramadanYear: string;
-  totalSalary: number;
-  userId: string;
-  createdAt?: Date;
-  updatedAt?: Date;
-}
-
-export interface IRamadanIftarSalaryPayment {
+export interface IRamadanTarabiPayment {
   id?: string;
   amount: number;
   payDate?: Date;
-  salaryId: string;
+  ramadanYearId: string;
   memberId: string;
+  mosqueId?: string;
   userId: string;
-  createdAt?: Date;
 }

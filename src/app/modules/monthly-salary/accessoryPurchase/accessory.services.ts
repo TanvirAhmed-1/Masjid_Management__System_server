@@ -17,8 +17,8 @@ const getAllPurchasesDB = async (query: any) => {
     sortOrder = "desc",
     itemName,
     memberName,
-    from, // starting date
-    to, // ending date
+    from, 
+    to, 
   } = query;
 
   if (!mosqueId) {

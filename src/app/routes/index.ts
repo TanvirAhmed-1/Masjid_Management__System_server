@@ -5,7 +5,7 @@ import { itikaRoutes } from "../modules/ramadan/itikaf/itikaf.route";
 import { ifterlistRoutes } from "../modules/ramadan/ifterList/ifterlist.route";
 import { memberRoutes } from "../modules/monthly-salary/member/member.routes";
 import { paymentRoutes } from "../modules/monthly-salary/payment/payment.routes";
-import { ramadanTarabiSalaryRoutes } from "../modules/ramadan/ramadan-tarabi-salary/ramadan-tarabi-salary.route";
+import { ramadanTarabiPaymentRoutes } from "../modules/ramadan/ramadan-tarabi-salary/ramadan-tarabi-salary.route";
 import { fridayCollectionRoutes } from "../modules/collection/friday-collection/friday-collection.route";
 import { otherCollectionNameRoutes } from "../modules/collection/collection-datasetUp-Name/otherCollectionName.route";
 import { otherCollectionRoutes } from "../modules/collection/other-collection/other-collection.route";
@@ -28,7 +28,7 @@ const allRouters = [
   ifterlistRoutes,
   memberRoutes,
   paymentRoutes,
-  ramadanTarabiSalaryRoutes,
+  ramadanTarabiPaymentRoutes,
   fridayCollectionRoutes,
   otherCollectionNameRoutes,
   otherCollectionRoutes,
