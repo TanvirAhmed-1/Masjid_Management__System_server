@@ -44,13 +44,15 @@ const getAllPaymentsDB = async (query: any) => {
     if (to) whereCondition.payDate.lte = new Date(to);
   }
 
-  // 3. Execute count and findMany in parallel for better performance
   const [data, total] = await Promise.all([
     prisma.ramadanTarabiPayment.findMany({
       where: whereCondition,
       include: {
         member: true,
         ramadanYear: true,
+        mosque: {
+          select: { name: true },
+        },
       },
       skip,
       take: limitNumber,
@@ -89,7 +91,7 @@ const updatePaymentDB = async (
     where: { id },
   });
   if (!existingPayment) throw new Error("Payment not found");
-  
+
   return await prisma.ramadanTarabiPayment.update({
     where: { id },
     data: payload,

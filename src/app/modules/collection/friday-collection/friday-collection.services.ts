@@ -80,6 +80,11 @@ const getallcollectionDB = async (queryParams: Record<string, any>) => {
           email: true,
         },
       },
+        mosque: {
+          select: {
+            name: true,
+          },
+        },
     },
   });
 

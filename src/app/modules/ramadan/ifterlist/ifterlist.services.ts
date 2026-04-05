@@ -49,6 +49,92 @@ const createlistDB = async (payload: IfterListInterface) => {
   return newList;
 };
 
+// const getifterlistDB = async (query: any) => {
+//   const {
+//     mosqueId,
+//     limit = 20,
+//     page = 1,
+//     sortBy = "createdAt",
+//     sortOrder = "desc",
+//     ramadanYear,
+//     date,
+//     name,
+//   } = query;
+
+//   if (!mosqueId) {
+//     throw new Error("Mosque ID is required");
+//   }
+
+//   const skip = (Number(page) - 1) * Number(limit);
+//   const take = Number(limit);
+
+//   const whereCondition: any = { mosqueId };
+
+//   if (ramadanYear) {
+//     whereCondition.ramadanyearId = ramadanYear;
+//   }
+
+//   // 🟢 merge doners filter safely
+//   if (date || name) {
+//     whereCondition.doners = {
+//       some: {},
+//     };
+
+//     if (date) {
+//       whereCondition.doners.some.iftarDate = new Date(date);
+//     }
+
+//     if (name) {
+//       whereCondition.doners.some.name = {
+//         contains: name,
+//         mode: "insensitive",
+//       };
+//     }
+//   }
+
+//   const total = await prisma.ifterList.count({
+//     where: whereCondition,
+//   });
+
+//   const result = await prisma.ifterList.findMany({
+//     where: whereCondition,
+//     skip,
+//     take,
+//     orderBy: {
+//       [sortBy]: sortOrder,
+//     },
+//     include: {
+//       doners: {
+//         orderBy: {
+//           serialNumber: "desc",
+//         },
+//       },
+//       mosque: {
+//         select: {
+//           name: true,
+//         },
+//       },
+//       ramadanyear: {
+//         select: {
+//           id: true,
+//           ramadanYear: true,
+//           titleName: true,
+//         },
+//       },
+//     },
+//   });
+
+//   return {
+//     meta: {
+//       page: Number(page),
+//       limit: Number(limit),
+//       total,
+//       totalPage: Math.ceil(total / Number(limit)),
+//     },
+//     data: result,
+//   };
+// };
+
 const getifterlistDB = async (query: any) => {
   const {
     mosqueId,
@@ -56,7 +142,7 @@ const getifterlistDB = async (query: any) => {
     page = 1,
     sortBy = "createdAt",
     sortOrder = "desc",
-    ramadanYear,
+    ramadanYear, 
     date,
     name,
   } = query;
@@ -69,27 +155,29 @@ const getifterlistDB = async (query: any) => {
   const take = Number(limit);
 
   const whereCondition: any = { mosqueId };
-
   if (ramadanYear) {
-    whereCondition.ramadanyearId = ramadanYear;
+    whereCondition.ramadanyear = {
+      ramadanYear: ramadanYear.toString(), 
+    };
   }
 
-  // 🟢 merge doners filter safely
   if (date || name) {
-    whereCondition.doners = {
-      some: {},
-    };
+    const donorFilter: any = {};
 
     if (date) {
-      whereCondition.doners.some.iftarDate = new Date(date);
+      donorFilter.iftarDate = new Date(date);
     }
 
     if (name) {
-      whereCondition.doners.some.name = {
+      donorFilter.name = {
         contains: name,
         mode: "insensitive",
       };
     }
+
+    whereCondition.doners = {
+      some: donorFilter,
+    };
   }
 
   const total = await prisma.ifterList.count({
@@ -105,17 +193,18 @@ const getifterlistDB = async (query: any) => {
     },
     include: {
       doners: {
+        where: date || name ? {
+          ...(date && { iftarDate: new Date(date) }),
+          ...(name && { name: { contains: name, mode: "insensitive" } })
+        } : {},
         orderBy: {
-          serialNumber: "desc",
+          serialNumber: "asc",
         },
       },
-      ramadanyear: {
-        select: {
-          id: true,
-          ramadanYear: true,
-          titleName: true,
-        },
+      mosque: {
+        select: { name: true },
       },
+      ramadanyear: true,
     },
   });
 

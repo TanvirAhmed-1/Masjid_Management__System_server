@@ -169,14 +169,6 @@ const getCollectionByIdDB = async (query: any) => {
     sortOrder = "desc",
   } = query;
 
-  // Debug log
-  console.log("Filtering donors with:", {
-    donorName,
-    fromDate,
-    toDate,
-    amount,
-  });
-
   if (!mosqueId) throw new Error("Mosque ID is required");
   if (!id) throw new Error("Collection ID is required");
 
@@ -215,9 +207,6 @@ const getCollectionByIdDB = async (query: any) => {
     donorWhereCondition.amount = Number(amount);
   }
 
-  // Debug log
-  console.log("Final donor where condition:", JSON.stringify(donorWhereCondition, null, 2));
-
   // Get total count of filtered donors
   const totalDonors = await prisma.donerName.count({
     where: {
@@ -225,8 +214,6 @@ const getCollectionByIdDB = async (query: any) => {
       ...donorWhereCondition,
     },
   });
-
-  console.log("Total donors found:", totalDonors);
 
   // Fetch collection with filtered and paginated donors
   const collection = await prisma.otherCollection.findUnique({
@@ -236,6 +223,11 @@ const getCollectionByIdDB = async (query: any) => {
         select: {
           title: true,
           description: true,
+        },
+      },
+      mosque: {
+        select: {
+          name: true,
         },
       },
       donors: {
