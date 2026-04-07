@@ -2,6 +2,41 @@ import prisma from "../../../utils/prisma";
 import { IRamadanTarabiPayment } from "./ramadan-tarabi-salary.interface";
 
 const createPaymentDB = async (payload: IRamadanTarabiPayment) => {
+  const { ramadanYearId, memberId, mosqueId, paidAmount = 0, amount } = payload;
+
+  const existing = await prisma.ramadanTarabiPayment.findFirst({
+    where: {
+      ramadanYearId,
+      memberId,
+      mosqueId,
+    },
+  });
+
+  // ✅ UPDATE
+  if (existing) {
+    const totalAmount = existing.amount;
+    const currentPaid = existing.paidAmount;
+    const newPaidAmount = currentPaid + paidAmount;
+
+    const due = totalAmount - currentPaid;
+
+    // ❌ ONLY greater than (not equal)
+    if (paidAmount > due) {
+      throw new Error(`You can pay maximum ${due} taka`);
+    }
+
+    return await prisma.ramadanTarabiPayment.update({
+      where: { id: existing.id },
+      data: {
+        paidAmount: newPaidAmount,
+        payDate: new Date(),
+      },
+    });
+  }
+  if (paidAmount > amount) {
+    throw new Error("Paid amount cannot be greater than total amount");
+  }
+
   return await prisma.ramadanTarabiPayment.create({
     data: payload,
   });
@@ -24,20 +59,15 @@ const getAllPaymentsDB = async (query: any) => {
     throw new Error("Mosque ID is required");
   }
 
-  // 1. Setup Pagination values
   const pageNumber = Math.max(Number(page), 1);
   const limitNumber = Math.max(Number(limit), 1);
   const skip = (pageNumber - 1) * limitNumber;
 
-  // 2. Build where conditions
-  const whereCondition: any = {
-    mosqueId,
-  };
+  const whereCondition: any = { mosqueId };
 
   if (ramadanYearId) whereCondition.ramadanYearId = ramadanYearId;
   if (memberId) whereCondition.memberId = memberId;
 
-  // Date Range Filtering
   if (form || to) {
     whereCondition.payDate = {};
     if (form) whereCondition.payDate.gte = new Date(form);
@@ -65,7 +95,11 @@ const getAllPaymentsDB = async (query: any) => {
     }),
   ]);
 
-  // 4. Return the structure matching your frontend's expected JSON
+  const formattedData = data.map((item) => ({
+    ...item,
+    dueAmount: item.amount - item.paidAmount,
+  }));
+
   return {
     meta: {
       page: pageNumber,
@@ -73,7 +107,7 @@ const getAllPaymentsDB = async (query: any) => {
       total,
       totalPage: Math.ceil(total / limitNumber),
     },
-    data,
+    data: formattedData,
   };
 };
 const getPaymentByIdDB = async (id: string) => {
@@ -87,17 +121,29 @@ const updatePaymentDB = async (
   id: string,
   payload: Partial<IRamadanTarabiPayment>,
 ) => {
-  const existingPayment = await prisma.ramadanTarabiPayment.findUnique({
+  const existing = await prisma.ramadanTarabiPayment.findUnique({
     where: { id },
   });
-  if (!existingPayment) throw new Error("Payment not found");
+
+  if (!existing) throw new Error("Payment not found");
+
+  const due = existing.amount - existing.paidAmount;
+  const incomingPayment = payload.paidAmount || 0;
+
+  if (incomingPayment > due) {
+    throw new Error(`You can pay maximum ${due} taka`);
+  }
+
+  const newPaidAmount = existing.paidAmount + incomingPayment;
 
   return await prisma.ramadanTarabiPayment.update({
     where: { id },
-    data: payload,
+    data: {
+      paidAmount: newPaidAmount,
+      payDate: new Date(),
+    },
   });
 };
-
 const deletePaymentDB = async (id: string) => {
   return await prisma.ramadanTarabiPayment.delete({
     where: { id },

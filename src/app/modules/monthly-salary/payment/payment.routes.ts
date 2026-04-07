@@ -21,7 +21,6 @@ router.get(
 );
 router.get(
   "/payments/summary/:year",
-
   paymentController.getYearlyReport,
 );
 router.get("/payments", paymentController.getAllPayments);

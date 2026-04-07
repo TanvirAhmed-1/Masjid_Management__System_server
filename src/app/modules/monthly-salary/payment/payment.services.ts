@@ -146,6 +146,11 @@ class PaymentService {
             monthKey: "asc",
           },
         },
+        mosque: {
+          select: {
+            name: true,
+          },
+        },
         tarabiPayments: {
           where: {
             ramadanYear: {

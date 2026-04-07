@@ -193,6 +193,7 @@ model IfterList {
 model RamadanTarabiPayment {
   id            String      @id @default(auto()) @map("_id") @db.ObjectId
   amount        Float
+  paidAmount      Float      @default(0)
   payDate       DateTime    @default(now())
   
   ramadanYearId String      @db.ObjectId
