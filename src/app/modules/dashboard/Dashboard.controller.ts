@@ -2,17 +2,54 @@ import httpStatus from "http-status";
 import catchAsync from "../../utils/catchAsync";
 import { DashboardServices } from "./Dashboard.services";
 
-const getDashboardStats = catchAsync(async (req, res) => {
-  const mosqueId = req.user?.mosqueId;
+// ─── helper ────────────────────────────────────────────────────────────────
+/**
+ * Parses query params into a typed DateFilter object.
+ *
+ * Accepted query params:
+ *   mode   = "date" | "month" | "year"   (default: "month")
+ *   date   = "YYYY-MM-DD"                (when mode=date)
+ *   month  = 1-12                         (when mode=month)
+ *   year   = e.g. 2026                   (when mode=month or year)
+ */
+function parseFilter(query: Record<string, any>) {
+  const mode = (query.mode as string) || "month";
+  const now  = new Date();
 
+  return {
+    mode: mode as "date" | "month" | "year",
+    date:  query.date   as string | undefined,
+    month: query.month  ? Number(query.month)  : mode === "month" ? now.getMonth() + 1 : undefined,
+    year:  query.year   ? Number(query.year)   : now.getFullYear(),
+  };
+}
+
+function mosqueGuard(req: any, res: any): string | null {
+  const mosqueId = req.user?.mosqueId;
   if (!mosqueId) {
-    return res.status(httpStatus.BAD_REQUEST).json({
+    res.status(httpStatus.BAD_REQUEST).json({
       success: false,
       message: "Mosque not found in token",
     });
+    return null;
   }
+  return mosqueId;
+}
 
-  const result = await DashboardServices.getDashboardStatsDB(mosqueId);
+// ─── controllers ───────────────────────────────────────────────────────────
+
+/**
+ * GET /dashboard/stats
+ * Query: mode, date, month, year
+ *
+ * Returns financial overview (revenue, expense, net) for the given period.
+ */
+const getDashboardStats = catchAsync(async (req, res) => {
+  const mosqueId = mosqueGuard(req, res);
+  if (!mosqueId) return;
+
+  const filter = parseFilter(req.query as any);
+  const result = await DashboardServices.getDashboardStatsDB(mosqueId, filter);
 
   res.status(httpStatus.OK).json({
     success: true,
@@ -21,24 +58,82 @@ const getDashboardStats = catchAsync(async (req, res) => {
   });
 });
 
-const getMonthlyCollectionChart = catchAsync(async (req, res) => {
-  const mosqueId = req.user?.mosqueId;
+/**
+ * GET /dashboard/collections
+ * Query: mode, date, month, year, type (friday | member | other | all)
+ *
+ * Returns raw collection records filtered by date period.
+ */
+const getFilteredCollections = catchAsync(async (req, res) => {
+  const mosqueId = mosqueGuard(req, res);
+  if (!mosqueId) return;
 
-  if (!mosqueId) {
+  const filter = parseFilter(req.query as any);
+  const type   = (req.query.type as string) || "all";
+
+  if (!["friday", "member", "other", "all"].includes(type)) {
     return res.status(httpStatus.BAD_REQUEST).json({
       success: false,
-      message: "Mosque not found in token",
+      message: "Invalid type. Use: friday | member | other | all",
     });
   }
 
-  const year = req.query.year
-    ? Number(req.query.year)
-    : new Date().getFullYear();
-
-  const result = await DashboardServices.getMonthlyCollectionChartDB(
+  const result = await DashboardServices.getFilteredCollectionsDB(
     mosqueId,
-    year,
+    filter,
+    type as any
   );
+
+  res.status(httpStatus.OK).json({
+    success: true,
+    message: "Collections fetched successfully",
+    data: result,
+  });
+});
+
+/**
+ * GET /dashboard/expenses
+ * Query: mode, date, month, year, type (salary | purchase | tarabi | all)
+ *
+ * Returns raw expense records filtered by date period.
+ */
+const getFilteredExpenses = catchAsync(async (req, res) => {
+  const mosqueId = mosqueGuard(req, res);
+  if (!mosqueId) return;
+
+  const filter = parseFilter(req.query as any);
+  const type   = (req.query.type as string) || "all";
+
+  if (!["salary", "purchase", "tarabi", "all"].includes(type)) {
+    return res.status(httpStatus.BAD_REQUEST).json({
+      success: false,
+      message: "Invalid type. Use: salary | purchase | tarabi | all",
+    });
+  }
+
+  const result = await DashboardServices.getFilteredExpensesDB(
+    mosqueId,
+    filter,
+    type as any
+  );
+
+  res.status(httpStatus.OK).json({
+    success: true,
+    message: "Expenses fetched successfully",
+    data: result,
+  });
+});
+
+/**
+ * GET /dashboard/chart/monthly
+ * Query: year
+ */
+const getMonthlyCollectionChart = catchAsync(async (req, res) => {
+  const mosqueId = mosqueGuard(req, res);
+  if (!mosqueId) return;
+
+  const year   = req.query.year ? Number(req.query.year) : new Date().getFullYear();
+  const result = await DashboardServices.getMonthlyCollectionChartDB(mosqueId, year);
 
   res.status(httpStatus.OK).json({
     success: true,
@@ -47,18 +142,15 @@ const getMonthlyCollectionChart = catchAsync(async (req, res) => {
   });
 });
 
+/**
+ * GET /dashboard/activities
+ * Query: limit (default 10)
+ */
 const getRecentActivities = catchAsync(async (req, res) => {
-  const mosqueId = req.user?.mosqueId;
+  const mosqueId = mosqueGuard(req, res);
+  if (!mosqueId) return;
 
-  if (!mosqueId) {
-    return res.status(httpStatus.BAD_REQUEST).json({
-      success: false,
-      message: "Mosque not found in token",
-    });
-  }
-
-  const limit = req.query.limit ? Number(req.query.limit) : 10;
-
+  const limit  = req.query.limit ? Number(req.query.limit) : 10;
   const result = await DashboardServices.getRecentActivitiesDB(mosqueId, limit);
 
   res.status(httpStatus.OK).json({
@@ -68,22 +160,16 @@ const getRecentActivities = catchAsync(async (req, res) => {
   });
 });
 
+/**
+ * GET /dashboard/members/payment-status
+ * Query: month (YYYY-MM, default current month)
+ */
 const getMemberPaymentStatus = catchAsync(async (req, res) => {
-  const mosqueId = req.user?.mosqueId;
+  const mosqueId = mosqueGuard(req, res);
+  if (!mosqueId) return;
 
-  if (!mosqueId) {
-    return res.status(httpStatus.BAD_REQUEST).json({
-      success: false,
-      message: "Mosque not found in token",
-    });
-  }
-
-  const month = req.query.month as string | undefined;
-
-  const result = await DashboardServices.getMemberPaymentStatusDB(
-    mosqueId,
-    month,
-  );
+  const month  = req.query.month as string | undefined;
+  const result = await DashboardServices.getMemberPaymentStatusDB(mosqueId, month);
 
   res.status(httpStatus.OK).json({
     success: true,
@@ -92,15 +178,12 @@ const getMemberPaymentStatus = catchAsync(async (req, res) => {
   });
 });
 
+/**
+ * GET /dashboard/staff/salary-overview
+ */
 const getStaffSalaryOverview = catchAsync(async (req, res) => {
-  const mosqueId = req.user?.mosqueId;
-
-  if (!mosqueId) {
-    return res.status(httpStatus.BAD_REQUEST).json({
-      success: false,
-      message: "Mosque not found in token",
-    });
-  }
+  const mosqueId = mosqueGuard(req, res);
+  if (!mosqueId) return;
 
   const result = await DashboardServices.getStaffSalaryOverviewDB(mosqueId);
 
@@ -113,6 +196,8 @@ const getStaffSalaryOverview = catchAsync(async (req, res) => {
 
 export const DashboardController = {
   getDashboardStats,
+  getFilteredCollections,
+  getFilteredExpenses,
   getMonthlyCollectionChart,
   getRecentActivities,
   getMemberPaymentStatus,
