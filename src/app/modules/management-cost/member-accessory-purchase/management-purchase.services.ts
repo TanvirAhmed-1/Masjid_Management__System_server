@@ -11,6 +11,11 @@ const fetchAllPurchasesDB = async () => {
   return await prisma.memberAccessoryPurchase.findMany({
     include: {
       user: true,
+      mosque: {
+        select: {
+          name: true,
+        },
+      },
     },
   });
 };
@@ -26,7 +31,7 @@ const fetchPurchaseByIdDB = async (id: string) => {
 
 const updatePurchaseDB = async (
   id: string,
-  payload: Partial<IMemberAccessoryPurchase>
+  payload: Partial<IMemberAccessoryPurchase>,
 ) => {
   const existing = await prisma.memberAccessoryPurchase.findUnique({
     where: { id },

@@ -16,6 +16,7 @@ import { monthlySalaryRoutes } from "../modules/management-cost/monthly-salary/m
 import { mosquememberRoutes } from "../modules/mosqueManagement/member/member.route";
 import { dashboardRoutes } from "../modules/dashboard/Dashboard.routes";
 import { accessoryPurchaseRoutes } from "../modules/monthly-salary/accessoryPurchase/accessory.routers";
+import { mosquegetRoutes } from "../modules/mosque/mosque.route";
 
 const router = Router();
 
@@ -37,6 +38,7 @@ const allRouters = [
   monthlySalaryRoutes,
   dashboardRoutes,
   accessoryPurchaseRoutes,
+  mosquegetRoutes,
 ];
 
 allRouters.forEach((route) => router.use(route));

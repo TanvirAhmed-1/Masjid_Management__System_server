@@ -83,6 +83,11 @@ const getAllMonthlySalaries = async (query: any) => {
     include: {
       staff: true,
       payments: true,
+      mosque: {
+        select: {
+          name: true,
+        },
+      },
     },
   });
 

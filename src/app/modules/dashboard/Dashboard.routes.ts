@@ -6,36 +6,23 @@ const route = Router();
 
 route.use(auth());
 
-// ─── Overview & finance ─────────────────────────────────────────────────────
-// GET /dashboard/stats?mode=month&month=4&year=2026
-// GET /dashboard/stats?mode=date&date=2026-04-09
-// GET /dashboard/stats?mode=year&year=2026
 route.get("/dashboard/stats", DashboardController.getDashboardStats);
-
-// ─── Collection records (revenue) ──────────────────────────────────────────
-// GET /dashboard/collections?mode=month&month=4&year=2026&type=friday
-// GET /dashboard/collections?mode=year&year=2026&type=all
 route.get("/dashboard/collections", DashboardController.getFilteredCollections);
-
-// ─── Expense records ────────────────────────────────────────────────────────
-// GET /dashboard/expenses?mode=month&month=4&year=2026&type=salary
-// GET /dashboard/expenses?mode=date&date=2026-04-09&type=all
 route.get("/dashboard/expenses", DashboardController.getFilteredExpenses);
+route.get(
+  "/dashboard/chart/monthly",
+  DashboardController.getMonthlyCollectionChart,
+);
 
-// ─── Chart ──────────────────────────────────────────────────────────────────
-// GET /dashboard/chart/monthly?year=2026
-route.get("/dashboard/chart/monthly", DashboardController.getMonthlyCollectionChart);
-
-// ─── Activities ─────────────────────────────────────────────────────────────
-// GET /dashboard/activities?limit=10
 route.get("/dashboard/activities", DashboardController.getRecentActivities);
+route.get(
+  "/dashboard/members/payment-status",
+  DashboardController.getMemberPaymentStatus,
+);
 
-// ─── Members ────────────────────────────────────────────────────────────────
-// GET /dashboard/members/payment-status?month=2026-04
-route.get("/dashboard/members/payment-status", DashboardController.getMemberPaymentStatus);
-
-// ─── Staff ──────────────────────────────────────────────────────────────────
-// GET /dashboard/staff/salary-overview
-route.get("/dashboard/staff/salary-overview", DashboardController.getStaffSalaryOverview);
+route.get(
+  "/dashboard/staff/salary-overview",
+  DashboardController.getStaffSalaryOverview,
+);
 
 export const dashboardRoutes = route;
