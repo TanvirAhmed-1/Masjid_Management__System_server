@@ -10,9 +10,9 @@ app.use(express.json());
 app.use(cookieParser());
 
 const allowedOrigins = [
+  "https://masjid-management-gules.vercel.app",
   "http://localhost:3000",
   "https://masjid-management-gules.vercel.app",
-  "https://masjid-management-gules.onrender.com",
 ];
 
 app.use(
