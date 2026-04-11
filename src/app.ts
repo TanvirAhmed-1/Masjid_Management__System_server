@@ -13,11 +13,11 @@ app.use(
   cors({
     origin: [
       "http://localhost:3000",
-      "http://localhost:3000/login",
+      "https://masjid-management-gules.vercel.app",
       "http://localhost:5000",
     ],
     credentials: true,
-  })
+  }),
 );
 
 //  Routes
@@ -27,9 +27,7 @@ app.get("/", (req, res) => {
   res.send("Server running successfully!");
 });
 
-
 app.use(globalErrorHandler);
-
 
 app.use(notFoundHandler);
 
