@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { ifterlistcontroller } from "./ifterlist.controller";
 import { auth } from "../../../middlewares/auth.middleware";
-import { ifterListSchema } from "./ifterlist.validation";
 import validateRequest from "../../../middlewares/validateRequest";
+import { ifterlistcontroller } from "./ifterlist.controller";
+import { ifterListSchema } from "./ifterlist.validation";
 
 const router = Router();
 router.use(auth());

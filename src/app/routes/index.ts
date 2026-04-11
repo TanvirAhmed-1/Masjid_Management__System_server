@@ -16,7 +16,7 @@ import { mosquememberRoutes } from "../modules/mosqueManagement/member/member.ro
 import { dashboardRoutes } from "../modules/dashboard/Dashboard.routes";
 import { accessoryPurchaseRoutes } from "../modules/monthly-salary/accessoryPurchase/accessory.routers";
 import { mosquegetRoutes } from "../modules/mosque/mosque.route";
-import { ifterlistRoutes } from "../modules/ramadan/ifterList/ifterlist.route";
+import { ifterlistRoutes } from "../modules/ramadan/ifterlist/ifterlist.route";
 
 const router = Router();
 

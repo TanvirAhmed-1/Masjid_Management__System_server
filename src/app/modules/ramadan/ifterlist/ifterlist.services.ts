@@ -142,7 +142,7 @@ const getifterlistDB = async (query: any) => {
     page = 1,
     sortBy = "createdAt",
     sortOrder = "desc",
-    ramadanYear, 
+    ramadanYear,
     date,
     name,
   } = query;
@@ -157,7 +157,7 @@ const getifterlistDB = async (query: any) => {
   const whereCondition: any = { mosqueId };
   if (ramadanYear) {
     whereCondition.ramadanyear = {
-      ramadanYear: ramadanYear.toString(), 
+      ramadanYear: ramadanYear.toString(),
     };
   }
 
@@ -193,10 +193,13 @@ const getifterlistDB = async (query: any) => {
     },
     include: {
       doners: {
-        where: date || name ? {
-          ...(date && { iftarDate: new Date(date) }),
-          ...(name && { name: { contains: name, mode: "insensitive" } })
-        } : {},
+        where:
+          date || name
+            ? {
+                ...(date && { iftarDate: new Date(date) }),
+                ...(name && { name: { contains: name, mode: "insensitive" } }),
+              }
+            : {},
         orderBy: {
           serialNumber: "asc",
         },
