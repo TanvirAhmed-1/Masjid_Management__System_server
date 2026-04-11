@@ -9,37 +9,20 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 
-// const allowedOrigins = [
-//   "http://localhost:3000",
-//   "https://masjid-management-gules.vercel.app",
-// ];
-
-// app.use(
-//   cors({
-//     origin: allowedOrigins,
-//     credentials: true,
-//   }),
-// );
-
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://masjid-management-gules.vercel.app",
+  "https://masjid-management-gules.onrender.com",
+];
 
 app.use(
   cors({
-    origin: (origin, callback) => {
-      const allowedOrigins = [
-        "http://localhost:3000",
-        "https://masjid-management-gules.vercel.app",
-      ];
-
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
+    origin: allowedOrigins,
     credentials: true,
-  })
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization", "Origin", "Accept"],
+  }),
 );
-
 
 //  Routes
 app.use("/api", BaseRouter);

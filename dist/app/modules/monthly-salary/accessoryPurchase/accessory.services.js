@@ -78,7 +78,7 @@ const updatePurchaseDB = (id, payload) => __awaiter(void 0, void 0, void 0, func
     });
 });
 const deletePurchaseDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(id);
+   
     const isExist = yield prisma_1.default.memberAccessoryPurchase.findUnique({
         where: { id },
     });
