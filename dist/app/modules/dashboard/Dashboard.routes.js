@@ -1,0 +1,16 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.dashboardRoutes = void 0;
+const express_1 = require("express");
+const Dashboard_controller_1 = require("./Dashboard.controller");
+const auth_middleware_1 = require("../../middlewares/auth.middleware");
+const route = (0, express_1.Router)();
+route.use((0, auth_middleware_1.auth)());
+route.get("/dashboard/stats", Dashboard_controller_1.DashboardController.getDashboardStats);
+route.get("/dashboard/collections", Dashboard_controller_1.DashboardController.getFilteredCollections);
+route.get("/dashboard/expenses", Dashboard_controller_1.DashboardController.getFilteredExpenses);
+route.get("/dashboard/chart/monthly", Dashboard_controller_1.DashboardController.getMonthlyCollectionChart);
+route.get("/dashboard/activities", Dashboard_controller_1.DashboardController.getRecentActivities);
+route.get("/dashboard/members/payment-status", Dashboard_controller_1.DashboardController.getMemberPaymentStatus);
+route.get("/dashboard/staff/salary-overview", Dashboard_controller_1.DashboardController.getStaffSalaryOverview);
+exports.dashboardRoutes = route;

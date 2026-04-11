@@ -1,0 +1,12 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.mosquegetRoutes = void 0;
+const express_1 = require("express");
+const mosque_controller_1 = require("./mosque.controller");
+const auth_middleware_1 = require("../../middlewares/auth.middleware");
+const cache_middleware_1 = require("../../middlewares/cache.middleware");
+const route = (0, express_1.Router)();
+route.use((0, auth_middleware_1.auth)());
+route.get("/get-mosque", (0, cache_middleware_1.cacheMiddleware)("mosque"), mosque_controller_1.mosqueController.getMosque);
+route.put("/update-mosque", mosque_controller_1.mosqueController.updateMosque);
+exports.mosquegetRoutes = route;
