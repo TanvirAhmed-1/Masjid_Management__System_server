@@ -2,7 +2,6 @@ import { Router } from "express";
 import { userRoute } from "../modules/user/user.route";
 import { ramadanDataSetUpRoute } from "../modules/ramadan/ramadan-datasetup/ramadan-datasetup.route";
 import { itikaRoutes } from "../modules/ramadan/itikaf/itikaf.route";
-import { ifterlistRoutes } from "../modules/ramadan/ifterList/ifterlist.route";
 import { memberRoutes } from "../modules/monthly-salary/member/member.routes";
 import { paymentRoutes } from "../modules/monthly-salary/payment/payment.routes";
 import { ramadanTarabiPaymentRoutes } from "../modules/ramadan/ramadan-tarabi-salary/ramadan-tarabi-salary.route";
@@ -17,6 +16,7 @@ import { mosquememberRoutes } from "../modules/mosqueManagement/member/member.ro
 import { dashboardRoutes } from "../modules/dashboard/Dashboard.routes";
 import { accessoryPurchaseRoutes } from "../modules/monthly-salary/accessoryPurchase/accessory.routers";
 import { mosquegetRoutes } from "../modules/mosque/mosque.route";
+import { ifterlistRoutes } from "../modules/ramadan/ifterList/ifterlist.route";
 
 const router = Router();
 
@@ -26,7 +26,6 @@ const allRouters = [
   mosqueRoutes,
   ramadanDataSetUpRoute,
   itikaRoutes,
-  ifterlistRoutes,
   memberRoutes,
   paymentRoutes,
   ramadanTarabiPaymentRoutes,
@@ -39,6 +38,7 @@ const allRouters = [
   dashboardRoutes,
   accessoryPurchaseRoutes,
   mosquegetRoutes,
+  ifterlistRoutes,
 ];
 
 allRouters.forEach((route) => router.use(route));
