@@ -17,6 +17,7 @@ import { dashboardRoutes } from "../modules/dashboard/Dashboard.routes";
 import { accessoryPurchaseRoutes } from "../modules/monthly-salary/accessoryPurchase/accessory.routers";
 import { mosquegetRoutes } from "../modules/mosque/mosque.route";
 import { ifterlistRoutes } from "../modules/ramadan/ifterlist/ifterlist.route";
+import { onlineDonationRoutes } from "../modules/onlinedonation/onlinedonation.routes";
 
 const router = Router();
 
@@ -39,6 +40,7 @@ const allRouters = [
   accessoryPurchaseRoutes,
   mosquegetRoutes,
   ifterlistRoutes,
+  onlineDonationRoutes,
 ];
 
 allRouters.forEach((route) => router.use(route));

@@ -47,6 +47,8 @@ model Mosque {
   otherCollections            OtherCollection[]
   staffs                      Staff[]
   doners                      Doner[]
+  bkashCredentials            BkashCredential[]
+  onlineDonations             OnlineDonation[]
 
   @@map("mosque")
 }
@@ -381,4 +383,63 @@ model MemberAccessoryPurchase {
 
   @@index([userId, mosqueId])
   @@map("member_accessory_purchase")
+}
+
+
+
+
+// 1. Store bKash API credentials for each mosque
+model BkashCredential {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  appKey     String
+  appSecret  String
+  username   String
+  password   String
+  isLive     Boolean  @default(false) // Toggle between Sandbox and Production
+  
+  mosqueId   String   @unique @db.ObjectId 
+  mosque     Mosque   @relation(fields: [mosqueId], references: [id])
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@map("bkash_credentials")
+}
+
+// 2. Record the actual online donations
+model OnlineDonation {
+  id               String          @id @default(auto()) @map("_id") @db.ObjectId
+  amount           Float
+  donorName        String?         @default("Anonymous")
+  donorPhone       String
+  donorDescription String?         // Fixed naming and type
+  purpose          DonationPurpose @default(GENERAL) // Added the relation to your Enum
+  
+  trxID            String          @unique 
+  paymentID        String          @unique 
+  status           DonationStatus  @default(PENDING)
+  
+  mosqueId         String          @db.ObjectId
+  mosque           Mosque          @relation(fields: [mosqueId], references: [id])
+
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+
+  @@index([mosqueId, trxID])
+  @@map("online_donations")
+}
+
+enum DonationStatus {
+  PENDING
+  SUCCESS
+  FAILED
+  CANCELLED
+}
+
+enum DonationPurpose {
+  GENERAL
+  ZAKAT
+  SADAQAH
+  CONSTRUCTION
+  MONTHLY_AMOUNT 
 }
