@@ -6,7 +6,10 @@ const router = Router();
 
 // ১. Public Route: পেমেন্ট ক্রিয়েট করার জন্য (ডোনাররা এটি ব্যবহার করবে)
 router.post("/create-payment", onlineDonationController.createOnlineDonation);
-
+router.get(
+  "/bkash-credentials",
+  onlineDonationController.getBkashCredentialCollection,
+);
 // ২. Admin Routes: সেটিংস এবং হিস্ট্রি দেখার জন্য
 router.post(
   "/bkash-credentials",

@@ -4,73 +4,109 @@ import { onlineDonationServices } from "./onlinedonation.services";
 import prisma from "../../utils/prisma";
 import axios from "axios";
 
-// ১. পেমেন্ট ইনিশিয়েট করা (Public)
 const createOnlineDonation = catchAsync(async (req, res) => {
-  const { amount, mosqueId } = req.body;
+  const { amount, mosqueId, donorPhone, donorName, purpose, donorDescription } = req.body;
+
+  // ১. ক্রেডেনশিয়াল খুঁজে বের করা
   const credentials = await prisma.bkashCredential.findUnique({
     where: { mosqueId },
   });
 
   if (!credentials) {
-    return res.status(404).json({ success: false, message: "Credentials not found!" });
+    return res.status(404).json({ success: false, message: "Mosque credentials not found!" });
   }
 
   const { appKey, appSecret, username, password, isLive } = credentials;
+  
+  // আপনার দেওয়া সঠিক স্যান্ডবক্স ইউআরএল স্ট্রাকচার
   const baseUrl = isLive 
-    ? "https://checkout.pay.bka.sh/v1.2.0-beta" 
-    : "https://checkout.sandbox.bka.sh/v1.2.0-beta";
+    ? "https://tokenized.pay.bka.sh/v1.2.0-beta/tokenized/checkout" 
+    : "https://tokenized.sandbox.bka.sh/v1.2.0-beta/tokenized/checkout";
 
   try {
-    // ২. bKash ID Token জেনারেট করা (Grant Token)
+    // ২. Grant Token জেনারেট করা (সঠিক হেডারসহ)
     const { data: tokenData } = await axios.post(
-      `${baseUrl}/checkout/token/grant`,
-      { app_key: appKey, app_secret: appSecret },
-      { headers: { username, password } }
+      `${baseUrl}/token/grant`,
+      { 
+        app_key: appKey, 
+        app_secret: appSecret 
+      },
+      { 
+        headers: { 
+          username: username, 
+          password: password,
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        } 
+      }
     );
 
-    const idToken = tokenData.id_token;
+    // টোকেন না পেলে এখানেই এরর থ্রো করবে
+    if (!tokenData.id_token) {
+      throw new Error("bKash Grant Token failed");
+    }
 
-    // ৩. bKash Payment Create করা
+    // ৩. Payment Create করা
     const { data: paymentData } = await axios.post(
-      `${baseUrl}/checkout/payment/create`,
+      `${baseUrl}/create`,
       {
         mode: "0011",
-        payerReference: req.body.donorPhone,
-        callbackURL: `${process.env.BACKEND_URL}/api/online-donations/callback`, // আপনার সার্ভার কলব্যাক
-        amount: amount,
+        payerReference: donorPhone || "017XXXXXXXX",
+         callbackURL: `${process.env.BACKEND_URL}/api/callback`, 
+        // callbackURL: "https://www.google.com", // টেস্টের জন্য গুগল ইউআরএল ব্যবহার করা হচ্ছে
+        amount: String(amount), 
         currency: "BDT",
         intent: "sale",
         merchantInvoiceNumber: `INV${Date.now()}`,
       },
       {
         headers: {
-          Authorization: idToken,
+          "Authorization": tokenData.id_token, // 'Bearer' দরকার নেই, শুধু টোকেন
           "X-APP-Key": appKey,
+          "Content-Type": "application/json",
+          "Accept": "application/json"
         },
       }
     );
 
-    // ৪. ডাটাবেসে পেন্ডিং রেকর্ড সেভ করা
+    // ৪. পেমেন্ট আইডি চেক করা
+    if (!paymentData.paymentID) {
+        // bKash থেকে আসা আসল এরর মেসেজ দেখার জন্য
+        console.error("bKash Error Response:", paymentData);
+        throw new Error(paymentData.errorMessage || "bKash Payment ID not generated");
+    }
+
+    // ৫. ডাটাবেসে সেভ (Prisma Schema অনুযায়ী)
     const dbRecord = await onlineDonationServices.createDonationRecordDB({
-      ...req.body,
+      amount: parseFloat(amount),
+      donorName: donorName || "Anonymous",
+      donorPhone: donorPhone,
+      donorDescription: donorDescription || "",
+      purpose: purpose || "GENERAL",
+      mosqueId: mosqueId,
       paymentID: paymentData.paymentID,
-      trxID: "PENDING", // পেমেন্ট সাকসেস হওয়ার পর আপডেট হবে
+      trxID: `PENDING_${paymentData.paymentID}`, // Unique হওয়ার জন্য
       status: "PENDING",
     });
 
-    // ৫. আসল bkashURL ফ্রন্টএন্ডে পাঠানো
-    res.status(httpStatus.OK).json({
+    res.status(200).json({
       success: true,
       message: "Payment initiated",
       result: {
-        bkashURL: paymentData.bkashURL, // এখন এটি আর ডামি নয়, আসল লিঙ্ক
+        bkashURL: paymentData.bkashURL,
         ...dbRecord,
       },
     });
 
   } catch (error: any) {
-    console.error("bKash Error:", error.response?.data || error.message);
-    res.status(500).json({ success: false, message: "bKash payment failed to initiate" });
+    // এখানে কনসোলে এররটি প্রিন্ট করুন সমস্যা বোঝার জন্য
+    console.error("FINAL BKASH ERROR:", error.response?.data || error.message);
+    
+    res.status(500).json({ 
+      success: false, 
+      message: "bKash payment initiation failed",
+      errorDetails: error.response?.data || error.message
+    });
   }
 });
 
@@ -126,9 +162,23 @@ const handlePaymentCallback = catchAsync(async (req, res) => {
   }
 });
 
+const getBkashCredentialCollection = catchAsync(async (req, res) => {
+  const mosqueId = req.user?.mosqueId;
+  if (!mosqueId) throw new Error("Mosque ID is required");
+
+  const result = await onlineDonationServices.getBkashCredentialDB(mosqueId);
+
+  res.status(httpStatus.OK).json({
+    success: true,
+    message: "bKash credentials fetched successfully",
+    result,
+  });
+});
+
 export const onlineDonationController = {
   saveBkashCredentials,
   getDonationHistory,
   handlePaymentCallback,
+  getBkashCredentialCollection,
   createOnlineDonation, // নতুন যুক্ত হয়েছে
 };

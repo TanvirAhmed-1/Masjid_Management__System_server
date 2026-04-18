@@ -11,10 +11,9 @@ const saveBkashCredentialDB = async (payload: BkashCredentialInterface) => {
     create: payload,
   });
 };
-
-const createDonationRecordDB = async (payload: OnlineDonationInterface) => {
-  return await prisma.onlineDonation.create({
-    data: payload,
+const getBkashCredentialDB = async (mosqueId: string) => {
+  return await prisma.bkashCredential.findUnique({
+    where: { mosqueId },
   });
 };
 
@@ -102,9 +101,28 @@ const getDonationsDB = async (query: any) => {
   };
 };
 
+const createDonationRecordDB = async (payload: any) => {
+  return await prisma.onlineDonation.create({
+    data: {
+      amount: payload.amount,
+      donorName: payload.donorName,
+      donorPhone: payload.donorPhone,
+      donorDescription: payload.donorDescription,
+      purpose: payload.purpose,
+      paymentID: payload.paymentID,
+      trxID: payload.trxID, // must be unique
+      status: payload.status,
+      mosque: {
+        connect: { id: payload.mosqueId }, // Prisma way to connect relation
+      },
+    },
+  });
+};
+
 export const onlineDonationServices = {
   saveBkashCredentialDB,
   createDonationRecordDB,
   updateDonationStatusDB,
   getDonationsDB,
+  getBkashCredentialDB,
 };
