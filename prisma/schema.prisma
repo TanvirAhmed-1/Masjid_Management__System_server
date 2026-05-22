@@ -59,7 +59,7 @@ model User {
   email     String     @unique
   password  String
   address   String
-  phone     String?    @unique
+  phone     String?
   role      RoleType   @default(USER)
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
@@ -103,6 +103,7 @@ model FridayCollection {
   updatedAt DateTime @updatedAt
 
   @@index([userId, mosqueId])
+  @@index([mosqueId, collectionDate])
   @@map("fridaycollection")
 }
 // Collection= Collection Data setup Model
@@ -122,6 +123,7 @@ model OtherCollectionName {
   updatedAt DateTime @updatedAt
 
   @@index([userId, mosqueId])
+  @@index([mosqueId])
   @@map("othercollectionname")
 }
 // Collection= Collection Data name base collection Model
@@ -143,6 +145,7 @@ model OtherCollection {
 
   @@index([otherCollectionNameId])
   @@index([userId, mosqueId])
+  @@index([mosqueId, createdAt])
   @@map("othercollection")
 }
 //ramadan= doner model like ifter doner
@@ -170,6 +173,7 @@ model RamadanYear {
   user   User   @relation(fields: [userId], references: [id])
   tarabiPayments   RamadanTarabiPayment[]
   @@index([userId, mosqueId])
+  @@index([mosqueId])
   @@map("ramadanyear")
 }
 //ramadan= ramadan year base ifter list model
@@ -189,6 +193,7 @@ model IfterList {
 
   @@index([ramadanyearId])
   @@index([userId, mosqueId])
+  @@index([mosqueId])
   @@map("ifterlist")
 }
 //ramadan= ramadan tarabi salary model
@@ -214,6 +219,7 @@ model RamadanTarabiPayment {
   updatedAt     DateTime    @updatedAt
 
   @@index([ramadanYearId, memberId, mosqueId])
+  @@index([mosqueId, payDate])
   @@map("ramadantarabipayment")
 }
 //ramadan= ifter list  model
@@ -229,6 +235,7 @@ model Doner {
   mosque       Mosque?   @relation(fields: [mosqueId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@index([ifterListId, mosqueId])
+  @@index([mosqueId])
   @@map("doners")
 }
 //ramadan= ramadan year base ifikaf list model
@@ -248,6 +255,7 @@ model IfikafList {
   updatedAt   DateTime    @updatedAt
 
   @@index([userId, ramadanId, mosqueId])
+  @@index([mosqueId])
   @@map("ifikaflist")
 }
 
@@ -255,7 +263,7 @@ model IfikafList {
 model Member {
   id            String    @id @default(auto()) @map("_id") @db.ObjectId
   name          String
-  phone         String?   @unique
+  phone         String?
   address       String?
   monthlyAmount Float
   payments      Payment[]
@@ -269,6 +277,7 @@ model Member {
   tarabiPayments   RamadanTarabiPayment[]
 
   @@index([userId, createdAt, mosqueId])
+  @@index([mosqueId, createdAt])
   @@map("member")
 }
 
@@ -289,8 +298,10 @@ model Payment {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@unique([memberId, monthKey])
+  @@index([memberId, monthKey])
   @@index([userId, mosqueId, memberId, monthKey])
+  @@index([mosqueId, monthKey])
+  @@index([mosqueId, paidDate])
   @@map("payment")
 }
 
@@ -341,6 +352,7 @@ model MonthlySalary {
 
   @@unique([month, staffId])
   @@index([staffId, mosqueId])
+  @@index([mosqueId, month])
   @@map("monthlysalary")
 } 
 
@@ -360,6 +372,7 @@ model SalaryPayment {
   createdAt DateTime @default(now())
 
   @@index([salaryId, userId, mosqueId])
+  @@index([mosqueId, payDate])
   @@map("salarypayment")
 }
 // mosque management = Member Accessory Purchase Model for masque development purpose
@@ -382,6 +395,7 @@ model MemberAccessoryPurchase {
   updatedAt      DateTime @updatedAt
 
   @@index([userId, mosqueId])
+  @@index([mosqueId, purchaseDate])
   @@map("member_accessory_purchase")
 }
 

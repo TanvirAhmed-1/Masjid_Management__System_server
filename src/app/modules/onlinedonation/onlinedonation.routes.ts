@@ -23,6 +23,12 @@ router.get(
   onlineDonationController.getDonationHistory,
 );
 
+router.delete(
+  "/bkash-credentials",
+  auth("ADMIN", "SUPER_ADMIN"),
+  onlineDonationController.deleteBkashCredentials,
+);
+
 // ৩. Public Callback: bKash থেকে অটো-রিডাইরেক্ট হবে
 router.get("/callback", onlineDonationController.handlePaymentCallback);
 

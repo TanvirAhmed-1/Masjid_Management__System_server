@@ -1,9 +1,8 @@
-// scripts/deleteSuperAdmin.ts
 
 import prisma from "../app/utils/prisma";
 
 async function main() {
-  const email = "tanvir1ahmed@example.com"; // আগের SUPER_ADMIN এর email
+  const email = "tanvir1ahmed@example.com";
 
   const existing = await prisma.user.findUnique({ where: { email } });
 

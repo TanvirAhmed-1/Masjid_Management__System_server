@@ -1,6 +1,7 @@
 import httpStatus from "http-status";
 import catchAsync from "../../utils/catchAsync";
 import { DashboardServices } from "./Dashboard.services";
+import { getCache, setCache } from "../../utils/cache.util";
 
 // ─── helper ────────────────────────────────────────────────────────────────
 /**
@@ -49,7 +50,28 @@ const getDashboardStats = catchAsync(async (req, res) => {
   if (!mosqueId) return;
 
   const filter = parseFilter(req.query as any);
+  const cacheKey = `dashboard:stats:${mosqueId}:${filter.mode}:${filter.date || "none"}:${filter.month || "none"}:${filter.year || "none"}`;
+
+  try {
+    const cachedResult = await getCache(cacheKey);
+    if (cachedResult) {
+      return res.status(httpStatus.OK).json({
+        success: true,
+        message: "Dashboard statistics fetched successfully (from Cache)",
+        data: cachedResult,
+      });
+    }
+  } catch (error) {
+    console.error("Redis error fetching dashboard stats cache:", error);
+  }
+
   const result = await DashboardServices.getDashboardStatsDB(mosqueId, filter);
+
+  try {
+    await setCache(cacheKey, result, 3600);
+  } catch (error) {
+    console.error("Redis error setting dashboard stats cache:", error);
+  }
 
   res.status(httpStatus.OK).json({
     success: true,
@@ -124,16 +146,33 @@ const getFilteredExpenses = catchAsync(async (req, res) => {
   });
 });
 
-/**
- * GET /dashboard/chart/monthly
- * Query: year
- */
 const getMonthlyCollectionChart = catchAsync(async (req, res) => {
   const mosqueId = mosqueGuard(req, res);
   if (!mosqueId) return;
 
   const year   = req.query.year ? Number(req.query.year) : new Date().getFullYear();
+  const cacheKey = `dashboard:chart:monthly:${mosqueId}:${year}`;
+
+  try {
+    const cachedResult = await getCache(cacheKey);
+    if (cachedResult) {
+      return res.status(httpStatus.OK).json({
+        success: true,
+        message: "Monthly collection chart data fetched successfully (from Cache)",
+        data: cachedResult,
+      });
+    }
+  } catch (error) {
+    console.error("Redis error fetching chart cache:", error);
+  }
+
   const result = await DashboardServices.getMonthlyCollectionChartDB(mosqueId, year);
+
+  try {
+    await setCache(cacheKey, result, 3600);
+  } catch (error) {
+    console.error("Redis error setting chart cache:", error);
+  }
 
   res.status(httpStatus.OK).json({
     success: true,

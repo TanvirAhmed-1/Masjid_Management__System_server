@@ -1,6 +1,7 @@
 import httpStatus from "http-status";
 import catchAsync from "../../../utils/catchAsync";
 import { memberServices } from "./member.services";
+import { getCache, setCache } from "../../../utils/cache.util";
 
 const createMember = catchAsync(async (req, res) => {
   const userId = req.user!.id;
@@ -18,10 +19,41 @@ const createMember = catchAsync(async (req, res) => {
 
 const getMembers = catchAsync(async (req, res) => {
   const mosqueId = req.user?.mosqueId;
+  if (!mosqueId) {
+    return res.status(httpStatus.BAD_REQUEST).json({
+      success: false,
+      message: "Mosque ID not found in token",
+    });
+  }
+
+  const filter = req.query || {};
+  const cacheKey = `members:list:${mosqueId}:${filter.page || 1}:${filter.limit || 20}:${filter.sortBy || "createdAt"}:${filter.sortOrder || "desc"}:${filter.name || "none"}:${filter.phone || "none"}:${filter.address || "none"}`;
+
+  try {
+    const cachedResult = await getCache(cacheKey);
+    if (cachedResult) {
+      return res.status(httpStatus.OK).json({
+        success: true,
+        statusCode: 200,
+        message: "Members fetched successfully (from Cache)",
+        result: cachedResult,
+      });
+    }
+  } catch (error) {
+    console.error("Redis error fetching members cache:", error);
+  }
+
   const result = await memberServices.getAllMembersDB({
     mosqueId,
     ...req.query,
   });
+
+  try {
+    await setCache(cacheKey, result, 3600);
+  } catch (error) {
+    console.error("Redis error setting members cache:", error);
+  }
+
   res.status(httpStatus.OK).json({
     success: true,
     statusCode: 200,

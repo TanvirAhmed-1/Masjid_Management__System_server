@@ -1,8 +1,5 @@
 import prisma from "../../utils/prisma";
-import {
-  BkashCredentialInterface,
-  OnlineDonationInterface,
-} from "./onlinedonation.interface";
+import { BkashCredentialInterface } from "./onlinedonation.interface";
 
 const saveBkashCredentialDB = async (payload: BkashCredentialInterface) => {
   return await prisma.bkashCredential.upsert({
@@ -14,6 +11,11 @@ const saveBkashCredentialDB = async (payload: BkashCredentialInterface) => {
 const getBkashCredentialDB = async (mosqueId: string) => {
   return await prisma.bkashCredential.findUnique({
     where: { mosqueId },
+    include: {
+      mosque: {
+        select: { name: true, id: true },
+      },
+    },
   });
 };
 
@@ -119,10 +121,17 @@ const createDonationRecordDB = async (payload: any) => {
   });
 };
 
+const deleteBkashCredentialDB = async (mosqueId: string) => {
+  return await prisma.bkashCredential.delete({
+    where: { mosqueId },
+  });
+};
+
 export const onlineDonationServices = {
   saveBkashCredentialDB,
   createDonationRecordDB,
   updateDonationStatusDB,
   getDonationsDB,
   getBkashCredentialDB,
+  deleteBkashCredentialDB,
 };

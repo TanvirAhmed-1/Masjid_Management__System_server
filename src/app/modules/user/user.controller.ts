@@ -16,7 +16,6 @@ const createdUser = catchAsync(async (req, res) => {
 
 // Fetch All Users
 const fetchUser = catchAsync(async (req, res) => {
-  console.log("Token received:", req.headers.authorization);
 
   const result = await userServices.getUserDB();
   res.status(httpStatus.OK).json({

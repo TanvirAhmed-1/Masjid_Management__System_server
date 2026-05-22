@@ -162,16 +162,82 @@ const handlePaymentCallback = catchAsync(async (req, res) => {
   }
 });
 
+import verifyToken from "../../utils/verifyToken";
+
 const getBkashCredentialCollection = catchAsync(async (req, res) => {
-  const mosqueId = req.user?.mosqueId;
-  if (!mosqueId) throw new Error("Mosque ID is required");
+  let mosqueId = req.query.mosqueId as string;
+  let isPublicRequest = true;
+
+  // 1. Check if there's an admin token in the headers
+  const authHeader = req.headers.authorization;
+  if (authHeader && authHeader.startsWith("Bearer ")) {
+    const token = authHeader.split(" ")[1];
+    try {
+      const decoded: any = verifyToken(token);
+      if (decoded && decoded.id) {
+        const user = await prisma.user.findUnique({
+          where: { id: decoded.id },
+          select: { role: true, mosqueId: true },
+        });
+        // If they are an admin or super admin, they have full access
+        if (user && (user.role === "ADMIN" || user.role === "SUPER_ADMIN")) {
+          isPublicRequest = false;
+          mosqueId = mosqueId || user.mosqueId || "";
+        }
+      }
+    } catch (e) {
+      // Ignored: Treat as public request if token is invalid
+    }
+  }
+
+  if (!mosqueId) {
+    return res.status(400).json({
+      success: false,
+      message: "Mosque ID is required",
+    });
+  }
 
   const result = await onlineDonationServices.getBkashCredentialDB(mosqueId);
 
+  if (!result) {
+    return res.status(404).json({
+      success: false,
+      message: "Mosque credentials not found",
+    });
+  }
+
+  // 2. If it is a public request, strip out all sensitive fields to protect financial security
+  if (isPublicRequest) {
+    const publicResult = {
+      id: result.id,
+      mosqueId: result.mosqueId,
+      isLive: result.isLive,
+      mosque: result.mosque,
+    };
+    return res.status(httpStatus.OK).json({
+      success: true,
+      message: "Mosque info fetched successfully",
+      result: publicResult,
+    });
+  }
+
+  // Otherwise, return full credentials for admin settings dashboard
   res.status(httpStatus.OK).json({
     success: true,
     message: "bKash credentials fetched successfully",
     result,
+  });
+});
+
+const deleteBkashCredentials = catchAsync(async (req, res) => {
+  const mosqueId = req.user?.mosqueId;
+  if (!mosqueId) throw new Error("Mosque ID is required");
+
+  await onlineDonationServices.deleteBkashCredentialDB(mosqueId);
+
+  res.status(httpStatus.OK).json({
+    success: true,
+    message: "bKash credentials deleted successfully",
   });
 });
 
@@ -181,4 +247,5 @@ export const onlineDonationController = {
   handlePaymentCallback,
   getBkashCredentialCollection,
   createOnlineDonation, // নতুন যুক্ত হয়েছে
+  deleteBkashCredentials,
 };

@@ -62,7 +62,6 @@ export const auth = (...requiredRoles: RoleType[]) => {
       }
     }
 
-    console.log("User Role:", user.mosqueId);
 
     // ✅ Role check
     if (

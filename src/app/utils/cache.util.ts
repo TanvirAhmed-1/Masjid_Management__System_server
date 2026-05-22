@@ -22,3 +22,21 @@ export const getCache = async (key: string) => {
 export const deleteCache = async (key: string) => {
   await redisClient.del(key);
 };
+
+export const deleteCachePattern = async (pattern: string) => {
+  if (!redisClient.isOpen) await redisClient.connect();
+  const keys = await redisClient.keys(pattern);
+  if (keys.length > 0) {
+    await redisClient.del(keys);
+  }
+};
+
+export const invalidateDashboardCache = async (mosqueId: string) => {
+  try {
+    await deleteCachePattern(`dashboard:stats:${mosqueId}:*`);
+    await deleteCachePattern(`dashboard:chart:monthly:${mosqueId}:*`);
+    await deleteCachePattern(`members:list:${mosqueId}:*`);
+  } catch (error) {
+    console.error(`Failed to invalidate dashboard cache for mosque ${mosqueId}:`, error);
+  }
+};

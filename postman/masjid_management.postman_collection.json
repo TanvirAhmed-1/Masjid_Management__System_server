@@ -1,0 +1,2429 @@
+{
+  "info": {
+    "_postman_id": "a1eed029-a15c-4dc6-956c-16ddafacae4c",
+    "name": "masjid_management",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "46298580",
+    "_collection_link": "https://go.postman.co/collection/46298580-a1eed029-a15c-4dc6-956c-16ddafacae4c?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "user",
+      "item": [
+        {
+          "name": "Get All User",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:5000/api/users",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "users"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"name\": \"Tanvir Ahmed\",\r\n  \"email\": \"tanvir@example.com\",\r\n  \"password\": \"123456\",\r\n  \"address\": \"Dhaka, Bangladesh\",\r\n  \"role\": \"USER\",\r\n  \"gender\": \"MALE\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:6000/api/register",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "6000",
+              "path": [
+                "api",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "// {\r\n//    \"email\": \"tanvir1ahmed@example.com\",\r\n//   \"password\": \"Admin@123\"\r\n// }\r\n\r\n{\r\n     \"email\": \"tanvir@gmail.com\",\r\n    \"password\": \"Abc@1234\"   \r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/login",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Auth Copy",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "// {\r\n//    \"email\": \"tanvir1ahmed@example.com\",\r\n//   \"password\": \"Admin@123\"\r\n// }\r\n\r\n{\r\n     \"email\": \"tanvir@gmail.com\",\r\n    \"password\": \"Abc@1234\"   \r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/login",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "ramadan",
+      "item": [
+        {
+          "name": "Ramadan Data SetUp",
+          "item": [
+            {
+              "name": "Create Ramadan Data SetUp",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"ramadanYear\":\"2026\",\r\n    \"titleName\":\"Ramadan (2026)\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:5000/api/ramadan-data-setups",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "5000",
+                  "path": [
+                    "api",
+                    "ramadan-data-setups"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get Ramadan Data SetUp",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "http://localhost:5000/api/ramadan-data-setups",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "5000",
+                  "path": [
+                    "api",
+                    "ramadan-data-setups"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update Ramadan Data SetUp",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"ramadanYear\":\"2027\",\r\n    \"titleName\":\"Ramadan (2026)\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:5000/api/ramadan-data-setups/68fcb5fd43ebb119653acd82",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "5000",
+                  "path": [
+                    "api",
+                    "ramadan-data-setups",
+                    "68fcb5fd43ebb119653acd82"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete Ramadan Data SetUp",
+              "request": {
+                "method": "GET",
+                "header": []
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "itikaf",
+          "item": [
+            {
+              "name": "Create Ramadan  itikaf",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"name\": \"Masjid Itikaf 2025\",\r\n  \"fromDate\": \"2025-04-01\",\r\n  \"toDate\": \"2025-04-10\",\r\n  \"ramadanid\": \"68fe5715ad8f79a05a147686\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:5000/api/itikafs",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "5000",
+                  "path": [
+                    "api",
+                    "itikafs"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get Ramadan  itikaf",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"ramadanYear\":\"2026\",\r\n    \"titleName\":\"Ramadan (2026)\"\r\n}"
+                },
+                "url": {
+                  "raw": "http://localhost:5000/api/itikafs",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "5000",
+                  "path": [
+                    "api",
+                    "itikafs"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get Ramadan  itikaf  By Ramadan Id",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"ramadanYear\":\"2026\",\r\n    \"titleName\":\"Ramadan (2026)\"\r\n}"
+                },
+                "url": {
+                  "raw": "http://localhost:5000/api/itikafs/6903726960fc4e94e6271d2a",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "5000",
+                  "path": [
+                    "api",
+                    "itikafs",
+                    "6903726960fc4e94e6271d2a"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update Ramadan  itikaf",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"name\": \"Masjid Itikaf 2025\",\r\n  \"fromDate\": \"2025-04-01T00:00:00.000Z\",\r\n  \"toDate\": \"2025-04-10T00:00:00.000Z\",\r\n  \"userId\": \"671cb0f4a9c23b68c1a4a7d1\",\r\n   \"ramadanId\": \"68fe5718ad8f79a05a147687\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:5000/api/itikafs/68fe5895ad8f79a05a14768b",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "5000",
+                  "path": [
+                    "api",
+                    "itikafs",
+                    "68fe5895ad8f79a05a14768b"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete Ramadan  itikaf",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:5000/api/itikafs/68fe57e6ad8f79a05a147689",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "5000",
+                  "path": [
+                    "api",
+                    "itikafs",
+                    "68fe57e6ad8f79a05a147689"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Ramadan Data Setup",
+          "item": [
+            {
+              "name": "Create Ramadan Data SetUp",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"titleName\":\"Ranadan Yera 2026\",\r\n    \"ramadanYear\":\"2026\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:5000/api/ramadan-data-setups",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "5000",
+                  "path": [
+                    "api",
+                    "ramadan-data-setups"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Ramadan Data SetUp",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:5000/api/ramadan-data-setups",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "5000",
+                  "path": [
+                    "api",
+                    "ramadan-data-setups"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update Ramadan Data SetUp",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"titleName\":\"Ranadan Yera 2029\",\r\n    \"ramadanYear\":\"2029\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:5000/api/ramadan-data-setups/68fe571aad8f79a05a147688",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "5000",
+                  "path": [
+                    "api",
+                    "ramadan-data-setups",
+                    "68fe571aad8f79a05a147688"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete Ramadan Data SetUp",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:5000/api/ramadan-data-setups/68fe571aad8f79a05a147688",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "5000",
+                  "path": [
+                    "api",
+                    "ramadan-data-setups",
+                    "68fe571aad8f79a05a147688"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Ifter List",
+          "item": [
+            {
+              "name": "Create ifter-List",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"ramadanyearId\": \"507f1f77bcf86cd799439011\",\r\n \r\n  \"doners\": [\r\n    {\r\n      \"serialNumber\": \"1\",\r\n      \"name\": \"Ahmed Khan\",\r\n      \"iftarDate\": \"2025-03-10T00:00:00.000Z\",\r\n      \"dayName\": \"Monday\"\r\n    },\r\n    {\r\n      \"serialNumber\": \"2\",\r\n      \"name\": \"Fatima Rahman\",\r\n      \"iftarDate\": \"2025-03-11T00:00:00.000Z\",\r\n      \"dayName\": \"Tuesday\"\r\n    },\r\n    {\r\n      \"serialNumber\": \"3\",\r\n      \"name\": \"Mohammad Ali\",\r\n      \"iftarDate\": \"2025-03-12T00:00:00.000Z\",\r\n      \"dayName\": \"Wednesday\"\r\n    },\r\n    {\r\n      \"serialNumber\": \"4\",\r\n      \"name\": \"Ayesha Begum\",\r\n      \"iftarDate\": \"2025-03-13T00:00:00.000Z\",\r\n      \"dayName\": \"Thursday\"\r\n    },\r\n    {\r\n      \"serialNumber\": \"5\",\r\n      \"name\": \"Ibrahim Hossain\",\r\n      \"iftarDate\": \"2025-03-14T00:00:00.000Z\",\r\n      \"dayName\": \"Friday\"\r\n    }\r\n  ]\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:5000/api/ifterlists",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "5000",
+                  "path": [
+                    "api",
+                    "ifterlists"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get ifter-List",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:5000/api/ifterlists?ramadanYear&date&name",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "5000",
+                  "path": [
+                    "api",
+                    "ifterlists"
+                  ],
+                  "query": [
+                    {
+                      "key": "ramadanYear",
+                      "value": null
+                    },
+                    {
+                      "key": "date",
+                      "value": null
+                    },
+                    {
+                      "key": "name",
+                      "value": null
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get ifter-List By Ramadn id",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:5000/api/ifterlists/6903726960fc4e94e6271d2a",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "5000",
+                  "path": [
+                    "api",
+                    "ifterlists",
+                    "6903726960fc4e94e6271d2a"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete ifter-List",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:5000/api/ifterlists/6902ee17d921e6230778128f",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "5000",
+                  "path": [
+                    "api",
+                    "ifterlists",
+                    "6902ee17d921e6230778128f"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete ifter Doner name",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:5000/api/ifterlists/doner/6903572e4e863a10c522af56",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "5000",
+                  "path": [
+                    "api",
+                    "ifterlists",
+                    "doner",
+                    "6903572e4e863a10c522af56"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update ifter-List",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n                  \r\n                    \"serialNumber\": \"1\",\r\n                    \"name\": \"Tanvir\",\r\n                    \"iftarDate\": \"2025-10-15T18:00:00.000Z\",\r\n                    \"dayName\": \"Sunday\",\r\n                    \"ifterListId\": \"690386ece8bc4bb919c89953\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:5000/api/ifterlists/690386ece8bc4bb919c89954",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "5000",
+                  "path": [
+                    "api",
+                    "ifterlists",
+                    "690386ece8bc4bb919c89954"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Ramadan Tarabi salary",
+          "item": [
+            {
+              "name": "Get Ramadan Tarabi salary",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZjY5MGMyYzNlNzhlZTliNmRhM2Q1NyIsImVtYWlsIjoidGFudmlyQGV4YW1wbGUuY29tIiwibmFtZSI6IlRhbnZpciBBaG1lZCIsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzY1MTMzNjcwLCJleHAiOjE3NjU3Mzg0NzB9.9DwwwJzS8TV3ArN1NhD-_NB8jWFiGVECSHQAnaEKBug}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:5000/api/tarabi-salary",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "5000",
+                  "path": [
+                    "api",
+                    "tarabi-salary"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Create Ramadan Tarabi salary",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{eyJheyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NDFiMDhkYWNhMDlmZjgxNTQ1NGIzZCIsImVtYWlsIjoidGFudmlyQGdtYWlsLmNvbSIsIm5hbWUiOiJBaG1lZCBUYW52aXIiLCJyb2xlIjoiQURNSU4iLCJtb3NxdWVJZCI6IjY5NDFiMDhkYWNhMDlmZjgxNTQ1NGIzYyIsImlhdCI6MTc3NTMxOTgwNSwiZXhwIjoxNzc1OTI0NjA1fQ.AfPr4WIRz6xZiiSDaBpuddrEmpu5mXCQ343aU1nS_iUbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZjY5MGMyYzNlNzhlZTliNmRhM2Q1NyIsImVtYWlsIjoidGFudmlyQGV4YW1wbGUuY29tIiwibmFtZSI6IlRhbnZpciBBaG1lZCIsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzY1MTMzNjcwLCJleHAiOjE3NjU3Mzg0NzB9.9DwwwJzS8TV3ArN1NhD-_NB8jWFiGVECSHQAnaEKBug}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"ramadanYearId\":\"6974cbb5fe53875e30ed1977\",\r\n  \"memberId\":\"6979054db398618084cff2df\",\r\n  \"amount\": 2000\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:5000/api/tarabi-payments",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "5000",
+                  "path": [
+                    "api",
+                    "tarabi-payments"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "update Ramadan Tarabi  salary payment",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZjY5MGMyYzNlNzhlZTliNmRhM2Q1NyIsImVtYWlsIjoidGFudmlyQGV4YW1wbGUuY29tIiwibmFtZSI6IlRhbnZpciBBaG1lZCIsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzY1MTMzNjcwLCJleHAiOjE3NjU3Mzg0NzB9.9DwwwJzS8TV3ArN1NhD-_NB8jWFiGVECSHQAnaEKBug}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n \"amount\": 2000 \r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:5000/api/tarabi-payments/69d1479183cbd2b18646963c",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "5000",
+                  "path": [
+                    "api",
+                    "tarabi-payments",
+                    "69d1479183cbd2b18646963c"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete Ramadan Tarabi salary Copy",
+              "request": {
+                "method": "DELETE",
+                "header": []
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "monthly-salary",
+      "item": [
+        {
+          "name": "Menber",
+          "item": [
+            {
+              "name": "Create Member",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZjY5MGMyYzNlNzhlZTliNmRhM2Q1NyIsImVtYWlsIjoidGFudmlyQGV4YW1wbGUuY29tIiwibmFtZSI6IlRhbnZpciBBaG1lZCIsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzYzOTIzMjQ5LCJleHAiOjE3NjQ1MjgwNDl9.s8MlQzbKIh4A48D3nY-Fkea5ThoXv68zwhaEnmIez7Q",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"name\": \"Karim Ahmed\",\r\n  \"phone\": \"01712345678\",\r\n  \"address\": \"Dhaka, Bangladesh\",\r\n  \"monthlyAmount\": 200\r\n}\r\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:5000/api/members",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "5000",
+                  "path": [
+                    "api",
+                    "members"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get Members",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:5000/api/members",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "5000",
+                  "path": [
+                    "api",
+                    "members"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update Members",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:5000/api/members",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "5000",
+                  "path": [
+                    "api",
+                    "members"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete Member",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZjY5MGMyYzNlNzhlZTliNmRhM2Q1NyIsImVtYWlsIjoidGFudmlyQGV4YW1wbGUuY29tIiwibmFtZSI6IlRhbnZpciBBaG1lZCIsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzYyMDE3Mzc0LCJleHAiOjE3NjI2MjIxNzR9.dWY_ZP4rWbmde1JjUnxDJ7qkSXyqndhwFx0pZIriU4M",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:5000/api/members/690640df754aa658cace538c",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "5000",
+                  "path": [
+                    "api",
+                    "members",
+                    "690640df754aa658cace538c"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get Member Payment Summary",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:5000/api/payments/member/6979054db398618084cff2df",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "5000",
+                  "path": [
+                    "api",
+                    "payments",
+                    "member",
+                    "6979054db398618084cff2df"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Monthly Payment",
+          "item": [
+            {
+              "name": "Create Monthly Payment",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"memberId\": \"69235a29e84ee140359b93df\",\r\n  \"monthKey\": \"2025-04\",\r\n  \"amount\": 600\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:5000/api/payments",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "5000",
+                  "path": [
+                    "api",
+                    "payments"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get Monthly Payment",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:5000/api/payments?name=Karim Ahmed&phone&monthKey&form&to",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "5000",
+                  "path": [
+                    "api",
+                    "payments"
+                  ],
+                  "query": [
+                    {
+                      "key": "name",
+                      "value": "Karim Ahmed",
+                      "type": "text"
+                    },
+                    {
+                      "key": "phone",
+                      "value": null,
+                      "type": "text"
+                    },
+                    {
+                      "key": "monthKey",
+                      "value": null,
+                      "type": "text"
+                    },
+                    {
+                      "key": "form",
+                      "value": null,
+                      "type": "text"
+                    },
+                    {
+                      "key": "to",
+                      "value": null,
+                      "type": "text"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update  Monthly Payment",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:5000/api/payments",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "5000",
+                  "path": [
+                    "api",
+                    "payments"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete Monthly Payment",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:5000/api/payments/697a55af09e35eaabe12f2e1",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "5000",
+                  "path": [
+                    "api",
+                    "payments",
+                    "697a55af09e35eaabe12f2e1"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Yearly payment summary",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/payments/summary/2026?page=1&limit=20",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "payments",
+                "summary",
+                "2026"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "collection",
+      "item": [
+        {
+          "name": "Friday-collection",
+          "item": [
+            {
+              "name": "Get Friday Collection",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{Token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:5000/api/friday-collections",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "5000",
+                  "path": [
+                    "api",
+                    "friday-collections"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Post Friday Collection",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{Token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n   \"amount\": 1200,\r\n   \"collectionDate\": \"2025-12-01\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:5000/api/friday-collections",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "5000",
+                  "path": [
+                    "api",
+                    "friday-collections"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update Friday Collection",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{Token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n   \"amount\": 1300\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:5000/api/friday-collections/693c5cff7ec49db3524cba67",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "5000",
+                  "path": [
+                    "api",
+                    "friday-collections",
+                    "693c5cff7ec49db3524cba67"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete Friday Collection",
+              "request": {
+                "method": "DELETE",
+                "header": []
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Collection",
+          "item": [
+            {
+              "name": "Get Collection",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:5000/api/collection-names",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "5000",
+                  "path": [
+                    "api",
+                    "collection-names"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Post Collection",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{Token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"title\":\"Ramadab Year Collection\",\r\n    \"description\":\"description this\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:5000/api/collection-names",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "5000",
+                  "path": [
+                    "api",
+                    "collection-names"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete Collection",
+              "request": {
+                "method": "GET",
+                "header": []
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Other-Collection",
+          "item": [
+            {
+              "name": "Get other-collection",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:5000/api/other-collection?name=fghjkl&fromData&toDate",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "5000",
+                  "path": [
+                    "api",
+                    "other-collection"
+                  ],
+                  "query": [
+                    {
+                      "key": "name",
+                      "value": "fghjkl",
+                      "type": "text"
+                    },
+                    {
+                      "key": "fromData",
+                      "value": null,
+                      "type": "text"
+                    },
+                    {
+                      "key": "toDate",
+                      "value": null,
+                      "type": "text"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Post other-collection",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"donors\": [\r\n    {\r\n      \"name\": \"Abdul Karim\",\r\n      \"amount\": 500\r\n    },\r\n    {\r\n      \"name\": \"Rahim Uddin\",\r\n      \"amount\": 1000\r\n    }\r\n  ],\r\n  \"otherCollectionNameId\": \"693cfceebb3cc0e1bd400fbf\",\r\n  \"date\": \"2025-12-13T00:00:00.000Z\"\r\n}\r\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:5000/api/other-collection",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "5000",
+                  "path": [
+                    "api",
+                    "other-collection"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete other-collection",
+              "request": {
+                "method": "GET",
+                "header": []
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "manage collection",
+          "item": [
+            {
+              "name": "Get collection by id",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"donors\": [\r\n    {\r\n      \"name\": \"Abdul Karim\",\r\n      \"amount\": 500\r\n    },\r\n    {\r\n      \"name\": \"Rahim Uddin\",\r\n      \"amount\": 1000\r\n    }\r\n  ],\r\n  \"otherCollectionNameId\": \"693cfceebb3cc0e1bd400fbf\"\r\n}\r\n"
+                },
+                "url": {
+                  "raw": "http://localhost:5000/api/other-collection/696fdccb1759fd9186f83187?donorName=masud al&limit=1&amount=100",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "5000",
+                  "path": [
+                    "api",
+                    "other-collection",
+                    "696fdccb1759fd9186f83187"
+                  ],
+                  "query": [
+                    {
+                      "key": "donorName",
+                      "value": "masud al"
+                    },
+                    {
+                      "key": "page",
+                      "value": null,
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "fromDate",
+                      "value": null,
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "toDate",
+                      "value": null,
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "limit",
+                      "value": "1"
+                    },
+                    {
+                      "key": "amount",
+                      "value": "100"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Post other-collection",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"donors\": [\r\n    {\r\n      \"name\": \"Abdul Karim\",\r\n      \"amount\": 500\r\n    },\r\n    {\r\n      \"name\": \"Rahim Uddin\",\r\n      \"amount\": 1000\r\n    }\r\n  ],\r\n  \"otherCollectionNameId\": \"693cfceebb3cc0e1bd400fbf\"\r\n}\r\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:5000/api/other-collection",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "5000",
+                  "path": [
+                    "api",
+                    "other-collection"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete other-collection",
+              "request": {
+                "method": "GET",
+                "header": []
+              },
+              "response": []
+            },
+            {
+              "name": "Get Collection By ID",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"donors\": [\r\n    {\r\n      \"name\": \"Abdul Karim\",\r\n      \"amount\": 500\r\n    },\r\n    {\r\n      \"name\": \"Rahim Uddin\",\r\n      \"amount\": 1000\r\n    }\r\n  ],\r\n  \"otherCollectionNameId\": \"693cfceebb3cc0e1bd400fbf\"\r\n}\r\n"
+                },
+                "url": {
+                  "raw": "http://localhost:5000/api/other-collection/693d13426c976250c555a613",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "5000",
+                  "path": [
+                    "api",
+                    "other-collection",
+                    "693d13426c976250c555a613"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "management-cost",
+      "item": [
+        {
+          "name": "staff",
+          "item": [
+            {
+              "name": "staff create",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "// {\r\n//   \"name\": \"Tanvir Ahmed\",\r\n//   \"phone\": \"017XXXXXXXX\",\r\n//   \"role\": \"Manager\",\r\n//   \"baseSalary\": 25000,\r\n//   \"joinDate\": \"2026-01-24\",\r\n//   \"active\": true,\r\n//   \"image\": \"https://example.com/image.jpg\",\r\n//   \"address\": \"Dhaka, Bangladesh\"\r\n// }\r\n\r\n{\r\n    \"name\": \"Tanvir Ahmed\",\r\n    \"phone\": \"01786924911\",\r\n    \"role\": \"rr\",\r\n    \"baseSalary\": 3456,\r\n    \"joinDate\": \"2026-01-20T18:00:00.000Z\",\r\n    \"address\": \"dfghj\",\r\n    \"active\": true\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:5000/api/staffs",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "5000",
+                  "path": [
+                    "api",
+                    "staffs"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "staff get",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:5000/api/staffs",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "5000",
+                  "path": [
+                    "api",
+                    "staffs"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Accessory-purchases",
+          "item": [
+            {
+              "name": "Create-accessory-purchases",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"itemName\": \"Ceiling Fan\",\r\n  \"quantity\": 2,\r\n  \"price\": 3500,\r\n  \"totalPrice\": 7000,\r\n  \"purchaseDate\": \"2026-03-12T10:00:00.000Z\",\r\n  \"description\": \"Two fans for the second floor prayer hall.\",\r\n  \"memberName\": \"Abdullah Al Mamun\",\r\n  \"paymentReceipt\": \"https://example.com/receipts/fan-001.pdf\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:5000/api/accessory-purchases",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "5000",
+                  "path": [
+                    "api",
+                    "accessory-purchases"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get-accessory-purchases",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:5000/api/accessory-purchases",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "5000",
+                  "path": [
+                    "api",
+                    "accessory-purchases"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update-accessory-purchases",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{Token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"itemName\": \"Ceiling Fan\",\r\n  \"quantity\": 2,\r\n  \"price\": 500,\r\n  \"totalPrice\": 7000,\r\n  \"purchaseDate\": \"2026-03-12T10:00:00.000Z\",\r\n  \"description\": \"Two fans for the second floor prayer hall.\",\r\n  \"memberName\": \"Abdullah Al Mamun\",\r\n  \"paymentReceipt\": \"https://example.com/receipts/fan-001.pdf\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:5000/api/accessory-purchases/69b2fb493bbc8fff6d7e989b",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "5000",
+                  "path": [
+                    "api",
+                    "accessory-purchases",
+                    "69b2fb493bbc8fff6d7e989b"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete Accessory",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{Token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:5000/api/accessory-purchases/69b2fb493bbc8fff6d7e989b",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "5000",
+                  "path": [
+                    "api",
+                    "accessory-purchases",
+                    "69b2fb493bbc8fff6d7e989b"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "staff monthly salary",
+          "item": [
+            {
+              "name": "staff create",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"staffId\": \"69765af4579e1f5879e4f72f\",\r\n    \"totalSalary\": 200,\r\n    \"month\": \"2026-02-02T18:00:00.000Z\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:5000/api/monthly-salaries",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "5000",
+                  "path": [
+                    "api",
+                    "monthly-salaries"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "staff get",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:5000/api/monthly-salaries?name&limit=20&page=1",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "5000",
+                  "path": [
+                    "api",
+                    "monthly-salaries"
+                  ],
+                  "query": [
+                    {
+                      "key": "name",
+                      "value": null,
+                      "type": "text"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "20",
+                      "type": "text"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1",
+                      "type": "text"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "staff Payment",
+          "item": [
+            {
+              "name": "staff create",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"salaryId\": \"69765af4579e1f5879e4f72f\",\r\n  \"amount\": 566000,\r\n  \"payDate\": \"2026-01-20T18:00:00.000Z\"\r\n}\r\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:5000/api/staff-salary-payments",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "5000",
+                  "path": [
+                    "api",
+                    "staff-salary-payments"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "staff get",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:5000/api/staff-salary-payments",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "5000",
+                  "path": [
+                    "api",
+                    "staff-salary-payments"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete staff",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:5000/api/staff-salary-payments",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "5000",
+                  "path": [
+                    "api",
+                    "staff-salary-payments"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Mosque Management",
+      "item": [
+        {
+          "name": "Mosque",
+          "item": [
+            {
+              "name": "Get Mosque",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:5000/api/mosques",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "5000",
+                  "path": [
+                    "api",
+                    "mosques"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Post Mosque",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"mosque\": {\r\n    \"name\": \"Central Mosque\",\r\n    \"address\": \"123 Main Street, Dhaka\",\r\n    \"phone\": \"01712345678\"\r\n  },  \r\n  \"admin\": {\r\n    \"name\": \"Ahmed Tanvir\",\r\n    \"email\": \"tanvir@gmail.com\",\r\n    \"password\": \"Abc@1234\",\r\n    \"confirmPassword\": \"Abc@1234\",\r\n    \"address\": \"456 Admin Street, Dhaka\",\r\n    \"gender\": \"MALE\",\r\n    \"phone\": \"01898765432\"\r\n  }\r\n}\r\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:5000/api/mosques",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "5000",
+                  "path": [
+                    "api",
+                    "mosques"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete Mosque",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:5000/api/mosques/",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "5000",
+                  "path": [
+                    "api",
+                    "mosques",
+                    ""
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update Mosque",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:5000/api/mosques/",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "5000",
+                  "path": [
+                    "api",
+                    "mosques",
+                    ""
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "member",
+          "item": [
+            {
+              "name": "Get Member",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{Token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:5000/api/mosque/members?name=eeee&email=tanvir11@gmail.com&phone=01786924911",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "5000",
+                  "path": [
+                    "api",
+                    "mosque",
+                    "members"
+                  ],
+                  "query": [
+                    {
+                      "key": "name",
+                      "value": "eeee"
+                    },
+                    {
+                      "key": "email",
+                      "value": "tanvir11@gmail.com"
+                    },
+                    {
+                      "key": "phone",
+                      "value": "01786924911"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Post Member",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{Token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"name\": \"Tanvir Ahmed\",\r\n  \"email\": \"tanvir1@example.com\",\r\n  \"phone\": \"01712345678\",\r\n  \"address\": \"Dhaka, Bangladesh\",\r\n  \"gender\": \"MALE\",\r\n  \"password\": \"123456\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:5000/api/mosque/members",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "5000",
+                  "path": [
+                    "api",
+                    "mosque",
+                    "members"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete Mosque",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{Token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:5000/api/mosque/members/6998ad3a22f86c885d5834a4",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "5000",
+                  "path": [
+                    "api",
+                    "mosque",
+                    "members",
+                    "6998ad3a22f86c885d5834a4"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update Mosque",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:5000/api/mosques/",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "5000",
+                  "path": [
+                    "api",
+                    "mosques",
+                    ""
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "dashboard",
+      "item": [
+        {
+          "name": "dashboard-stats",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{Token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "// {\r\n//    \"email\": \"tanvir1ahmed@example.com\",\r\n//   \"password\": \"Admin@123\"\r\n// }\r\n\r\n{\r\n     \"email\": \"tanvir@gmail.com\",\r\n    \"password\": \"Abc@1234\"   \r\n}"
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/dashboard/chart/monthly",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "dashboard",
+                "chart",
+                "monthly"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "mosques",
+      "item": [
+        {
+          "name": "get masque",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{Token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/get-mosque",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "get-mosque"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "update-masque",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{Token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\":\"Daudpur Masque Daudpur Badalgechi\",\r\n    \"address\": \"Daudpur Badalgechi\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/update-mosque",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "update-mosque"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Bkash Payment",
+      "item": [
+        {
+          "name": "New Request",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        },
+        {
+          "name": "create-payment",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{Token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"mosqueId\": \"6941b08daca09ff815454b3c\",\r\n    \"amount\": \"500\",\r\n    \"donorName\": \"Test Donor\",\r\n    \"donorPhone\": \"01770618567\",\r\n    \"purpose\": \"GENERAL\",\r\n    \"donorDescription\": \"This is a test donation from Postman\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/create-payment",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "create-payment"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{Tokenn}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "Token",
+      "value": ""
+    }
+  ]
+}

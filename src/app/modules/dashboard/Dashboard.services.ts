@@ -341,49 +341,115 @@ const getFilteredExpensesDB = async (
 // ===================== MONTHLY CHART =====================
 
 const getMonthlyCollectionChartDB = async (mosqueId: string, year: number) => {
+  const startOfYear = new Date(year, 0, 1, 0, 0, 0);
+  const endOfYear   = new Date(year, 11, 31, 23, 59, 59);
+
+  const [paymentsGrouped, fridayCollections, salaryPayments, purchases] = await Promise.all([
+    prisma.payment.groupBy({
+      by: ["monthKey"],
+      where: {
+        mosqueId,
+        monthKey: {
+          startsWith: `${year}-`,
+        },
+      },
+      _sum: {
+        amount: true,
+      },
+    }),
+    prisma.fridayCollection.findMany({
+      where: {
+        mosqueId,
+        collectionDate: {
+          gte: startOfYear,
+          lte: endOfYear,
+        },
+      },
+      select: {
+        collectionDate: true,
+        amount: true,
+      },
+    }),
+    prisma.salaryPayment.findMany({
+      where: {
+        mosqueId,
+        payDate: {
+          gte: startOfYear,
+          lte: endOfYear,
+        },
+      },
+      select: {
+        payDate: true,
+        amount: true,
+      },
+    }),
+    prisma.memberAccessoryPurchase.findMany({
+      where: {
+        mosqueId,
+        purchaseDate: {
+          gte: startOfYear,
+          lte: endOfYear,
+        },
+      },
+      select: {
+        purchaseDate: true,
+        totalPrice: true,
+      },
+    }),
+  ]);
+
   const months = Array.from({ length: 12 }, (_, i) => i);
 
-  const chartData = await Promise.all(
-    months.map(async (monthIndex) => {
-      const start    = new Date(year, monthIndex, 1);
-      const end      = new Date(year, monthIndex + 1, 0, 23, 59, 59);
-      const monthKey = `${year}-${String(monthIndex + 1).padStart(2, "0")}`;
+  const chartData = months.map((monthIndex) => {
+    const monthNumber = monthIndex + 1;
+    const monthKey = `${year}-${String(monthNumber).padStart(2, "0")}`;
 
-      const [friday, member, salary, purchase] = await Promise.all([
-        prisma.fridayCollection.aggregate({
-          where: { mosqueId, collectionDate: { gte: start, lte: end } },
-          _sum: { amount: true },
-        }),
-        prisma.payment.aggregate({
-          where: { mosqueId, monthKey },
-          _sum: { amount: true },
-        }),
-        prisma.salaryPayment.aggregate({
-          where: { mosqueId, payDate: { gte: start, lte: end } },
-          _sum: { amount: true },
-        }),
-        prisma.memberAccessoryPurchase.aggregate({
-          where: { mosqueId, purchaseDate: { gte: start, lte: end } },
-          _sum: { totalPrice: true },
-        }),
-      ]);
+    // 1. Member payments sum for this month from groupBy result
+    const memberPaymentObj = paymentsGrouped.find((p) => p.monthKey === monthKey);
+    const memberPaymentsSum = memberPaymentObj?._sum?.amount ?? 0;
 
-      const income  = (friday._sum.amount ?? 0) + (member._sum.amount ?? 0);
-      const expense = (salary._sum.amount ?? 0) + (purchase._sum.totalPrice ?? 0);
+    // 2. Friday collection sum for this month
+    let fridaySum = 0;
+    for (const fc of fridayCollections) {
+      const date = new Date(fc.collectionDate);
+      if (date.getMonth() === monthIndex) {
+        fridaySum += fc.amount;
+      }
+    }
 
-      return {
-        month:            new Date(year, monthIndex).toLocaleString("default", { month: "short" }),
-        monthIndex:       monthIndex + 1,
-        fridayCollection: Number((friday._sum.amount ?? 0).toFixed(2)),
-        memberPayments:   Number((member._sum.amount ?? 0).toFixed(2)),
-        totalIncome:      Number(income.toFixed(2)),
-        salaryExpense:    Number((salary._sum.amount ?? 0).toFixed(2)),
-        purchaseExpense:  Number((purchase._sum.totalPrice ?? 0).toFixed(2)),
-        totalExpense:     Number(expense.toFixed(2)),
-        net:              Number((income - expense).toFixed(2)),
-      };
-    })
-  );
+    // 3. Salary payment sum for this month
+    let salarySum = 0;
+    for (const sp of salaryPayments) {
+      const date = new Date(sp.payDate);
+      if (date.getMonth() === monthIndex) {
+        salarySum += sp.amount;
+      }
+    }
+
+    // 4. Accessory purchase sum for this month
+    let purchaseSum = 0;
+    for (const p of purchases) {
+      const date = new Date(p.purchaseDate);
+      if (date.getMonth() === monthIndex) {
+        purchaseSum += p.totalPrice;
+      }
+    }
+
+    const income  = fridaySum + memberPaymentsSum;
+    const expense = salarySum + purchaseSum;
+
+    return {
+      month:            new Date(year, monthIndex).toLocaleString("default", { month: "short" }),
+      monthIndex:       monthNumber,
+      fridayCollection: Number(fridaySum.toFixed(2)),
+      memberPayments:   Number(memberPaymentsSum.toFixed(2)),
+      totalIncome:      Number(income.toFixed(2)),
+      salaryExpense:    Number(salarySum.toFixed(2)),
+      purchaseExpense:  Number(purchaseSum.toFixed(2)),
+      totalExpense:     Number(expense.toFixed(2)),
+      net:              Number((income - expense).toFixed(2)),
+    };
+  });
 
   return {
     year,
