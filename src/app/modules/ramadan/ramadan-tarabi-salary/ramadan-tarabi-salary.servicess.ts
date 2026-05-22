@@ -95,7 +95,7 @@ const getAllPaymentsDB = async (query: any) => {
     }),
   ]);
 
-  const formattedData = data.map((item) => ({
+  const formattedData = data.map((item: any) => ({
     ...item,
     dueAmount: item.amount - item.paidAmount,
   }));

@@ -405,7 +405,7 @@ const getMonthlyCollectionChartDB = async (mosqueId: string, year: number) => {
     const monthKey = `${year}-${String(monthNumber).padStart(2, "0")}`;
 
     // 1. Member payments sum for this month from groupBy result
-    const memberPaymentObj = paymentsGrouped.find((p) => p.monthKey === monthKey);
+    const memberPaymentObj = paymentsGrouped.find((p: any) => p.monthKey === monthKey);
     const memberPaymentsSum = memberPaymentObj?._sum?.amount ?? 0;
 
     // 2. Friday collection sum for this month
